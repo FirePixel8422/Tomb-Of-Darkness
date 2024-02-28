@@ -101,7 +101,7 @@ public class DungeonGenerator : MonoBehaviour
             directions.Add(new int3(0, -1, 0) + gridPos);
         }
 
-        if (stairDir.x != 0 || stairDir.z != 0)
+        if (INT3.IsZero(stairDir) == false)
         {
             directions.Clear();
             directions.Add(stairDir + gridPos);
@@ -145,7 +145,10 @@ public class DungeonGenerator : MonoBehaviour
         return grid[y][x, z];
     }
 
-
+    public Node GetNodeFromGridPos(int3 gridPos)
+    {
+        return grid[gridPos.y][gridPos.x, gridPos.z];
+    }
 
 
 

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Unity.Mathematics;
@@ -28,39 +29,44 @@ public class PathFinding : MonoBehaviour
         grid = DungeonGenerator.Instance;
         grid.Init();
     }
+    public void ResetGenerationSystem()
+    {
+        for (int y = 0; y < grid.gridSizeY; y++)
+        {
+            for (int x = 0; x < grid.gridSizeX; x++)
+            {
+                for (int z = 0; z < grid.gridSizeZ; z++)
+                {
+                    grid.grid[y][x, z].ResetNode();
+                }
+            }
+        }
+    }
     public void FindPath(Vector3 startPos, Vector3 targetPos)
     {
+        ResetGenerationSystem();
+
         Stopwatch sw = new Stopwatch();
         sw.Start();
         Node startNode = grid.NodeFromWorldPoint(startPos);
         Node targetNode = grid.NodeFromWorldPoint(targetPos);
 
-        int3 pos = startNode.gridPos + new int3(0, 1, 0);
-        if (grid.IsInsideGrid(pos))
-        {
-            grid.grid[pos.y][pos.x, pos.z].walkable = false;
-        }
-
-        pos -= new int3(0, 2, 0);
-        if(grid.IsInsideGrid(pos))
-        {
-            grid.grid[pos.y][pos.x, pos.z].walkable = false;
-        }
-
 
         Heap<Node> openNodes = new Heap<Node>(grid.MaxSize);
         HashSet<Node> closedNodes = new HashSet<Node>();
+        
 
-        int[] movPenalties = new int[3];
-
-
-        int3 stairDir = int3.zero;
         int stairIndex = 0;
 
         openNodes.Add(startNode);
         while (openNodes.Count > 0)
         {
             Node currentNode = openNodes.RemoveFirst();
+            Node prevCurrentNode = grid.GetNodeFromGridPos(currentNode.parentIndex);
+
+            currentNode.stairLogicTimer = prevCurrentNode.stairLogicTimer;
+            currentNode.stairDir = prevCurrentNode.stairDir;
+
             closedNodes.Add(currentNode);
 
             if (currentNode == targetNode)
@@ -71,48 +77,36 @@ public class PathFinding : MonoBehaviour
                 return;
             }
 
-            if (stairIndex == 0)
-            {
-                stairDir = int3.zero;
-            }
-            else
-            {
-                stairIndex -= 1;
-            }
 
-
-            foreach (Node neigbour in grid.GetNeigbours(currentNode, currentNode.partOfStair > 0, stairDir))
+            foreach (Node neigbour in grid.GetNeigbours(currentNode, stairIndex > 0, currentNode.stairDir))
             {
-
                 if (!neigbour.walkable || closedNodes.Contains(neigbour))
                 {
                     continue;
                 }
-                movPenalties[0] = neigbour.movementPenalty;
-                movPenalties[1] = currentNode.movementPenalty;
-                movPenalties[2] = targetNode.movementPenalty;
 
                 int3 currentNodeGridPos = currentNode.gridPos;
 
-                int neigbourDist = GetDistance(movPenalties[1], movPenalties[0], currentNodeGridPos, neigbour.gridPos);
-                int newMovementCostToNeigbour = currentNode.gCost + neigbourDist + movPenalties[0] / 10 * neigbourDist;
+                int neigbourDist = GetDistance(int3.zero, currentNodeGridPos, neigbour.gridPos);
+                int newMovementCostToNeigbour = currentNode.gCost + neigbourDist;
                 
 
                 if (newMovementCostToNeigbour < neigbour.gCost || !openNodes.Contains(neigbour))
                 {
                     neigbour.gCost = newMovementCostToNeigbour;
-                    neigbour.hCost = GetDistance(movPenalties[0], movPenalties[2], neigbour.gridPos, targetNode.gridPos);
+                    neigbour.hCost = GetDistance(int3.zero, neigbour.gridPos, targetNode.gridPos);
                     
                     neigbour.parentIndex = currentNodeGridPos;
 
-                    if (neigbour.gridPos.x == currentNodeGridPos.x && neigbour.gridPos.z == currentNodeGridPos.z)
+                    if (neigbour.gridPos.x == currentNodeGridPos.x && neigbour.gridPos.z == currentNodeGridPos.z && INT3.IsZero(currentNode.stairDir))
                     {
                         neigbour.partOfStair = 1;
 
-                        int3 dir = new int3(currentNode.gridPos.x - neigbour.gridPos.x, currentNode.gridPos.y - neigbour.gridPos.y, currentNode.gridPos.z - neigbour.gridPos.z);
-                        neigbour.stairDir = dir;
-                        stairIndex = 2;
-                        stairDir = dir;
+                        int3 dir = INT3.Subtract(neigbour.gridPos, grid.GetNodeFromGridPos(currentNode.parentIndex).gridPos);
+                        neigbour.stairDir = new int3(dir.x, 0, dir.z);
+                        neigbour.stairLogicTimer = 3;
+
+                        stairIndex = 3;
                     }
                     if (currentNode.partOfStair == 1)
                     {
@@ -126,6 +120,16 @@ public class PathFinding : MonoBehaviour
                     }
                 }
             }
+
+            if (INT3.IsZero(currentNode.stairDir) == false)
+            {
+                currentNode.stairLogicTimer -= 1;
+                if (currentNode.stairLogicTimer == 0)
+                {
+                    currentNode.stairDir = int3.zero;
+                }
+            }
+            stairIndex -= 1;
         }
     }
     private void RetracePath(Node startNode, Node endNode)
@@ -142,14 +146,14 @@ public class PathFinding : MonoBehaviour
         grid.path = path;
     }
 
-    private int GetDistance(int movPenaltyA, int movPenaltyB, int3 gridPosA, int3 gridPosB)
+    private int GetDistance(int3 mod, int3 gridPosA, int3 gridPosB)
     {
         int distX = Mathf.Abs(gridPosA.x - gridPosB.x);
         int distY = Mathf.Abs(gridPosA.y - gridPosB.y);
         int distZ = Mathf.Abs(gridPosA.z - gridPosB.z);
 
-        return distX * distX == distZ ? UnityEngine.Random.Range(5,16) : 10
+        return distX * distX == distZ ? UnityEngine.Random.Range(8,13) : 10
             + distY * UnityEngine.Random.Range(-2, 16)
-            + distZ * distZ == distX ? UnityEngine.Random.Range(5, 16) : 10;
+            + distZ * distZ == distX ? UnityEngine.Random.Range(8, 13) : 10;
     }
 }

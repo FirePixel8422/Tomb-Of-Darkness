@@ -15,7 +15,9 @@ public class Node : IHeapItems<Node>
 
     public int3 parentIndex;
     public int partOfStair;
+
     public int3 stairDir;
+    public int stairLogicTimer;
 
 
     public int gCost;
@@ -26,6 +28,13 @@ public class Node : IHeapItems<Node>
         {
             return gCost + hCost;
         }
+    }
+
+    public void ResetNode()
+    {
+        walkable = true;
+        partOfStair = 0;
+        stairDir = 0;
     }
 
 
