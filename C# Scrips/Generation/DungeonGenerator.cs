@@ -16,7 +16,7 @@ public class DungeonGenerator : MonoBehaviour
     public bool drawGizmos;
     public Color cellColor;
     public bool drawPathGizmos;
-    public List<Node> path;
+    public List<List<Node>> path = new List<List<Node>>();
     public Color pathColor;
 
     public Vector3Int gridSize;
@@ -83,7 +83,7 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    public List<Node> GetNeigbours(Node node, bool disableYNodes)
+    public List<Node> GetNeigbours(Node node, int getStairDirection)
     {
         List<Node> neigbours = new List<Node>();
 
@@ -91,21 +91,28 @@ public class DungeonGenerator : MonoBehaviour
         List<int3> directions = new List<int3>()
         {
             new int3(1, 0, 0) + gridPos,
-            new int3(0, 0, 1) + gridPos,
             new int3(-1, 0, 0) + gridPos,
+            new int3(0, 0, 1) + gridPos,
             new int3(0, 0, -1) + gridPos,
         };
-        if (disableYNodes == false)
+
+
+        if (getStairDirection == 1)
         {
-            directions.Add(new int3(2, 1, 0) + gridPos);
-            directions.Add(new int3(2, -1, 0) + gridPos);
-            directions.Add(new int3(-2, 1, 0) + gridPos);
-            directions.Add(new int3(-2, -1, 0) + gridPos);
-            directions.Add(new int3(0, 1, 2) + gridPos);
-            directions.Add(new int3(0, -1, 2) + gridPos);
-            directions.Add(new int3(0, 1, -2) + gridPos);
-            directions.Add(new int3(0, -1, -2) + gridPos);
+            directions.Add(new int3(3, 1, 0) + gridPos);
+            directions.Add(new int3(-3, 1, 0) + gridPos);
+            directions.Add(new int3(0, 1, 3) + gridPos);
+            directions.Add(new int3(0, 1, -3) + gridPos);
         }
+        if (getStairDirection == -1)
+        {
+            directions.Add(new int3(3, -1, 0) + gridPos);
+            directions.Add(new int3(-3, -1, 0) + gridPos);
+            directions.Add(new int3(0, -1, 3) + gridPos);
+            directions.Add(new int3(0, -1, -3) + gridPos);
+        }
+
+
 
         foreach (int3 dir in directions)
         {
@@ -113,7 +120,6 @@ public class DungeonGenerator : MonoBehaviour
             {
                 continue;
             }
-            print(dir);
             Node targetNode = grid[dir.y][dir.x, dir.z];
             if(dir.y != 0)
             {
@@ -181,23 +187,26 @@ public class DungeonGenerator : MonoBehaviour
                 }
             }
         }
-        if (drawPathGizmos && path.Count != 0)
+        if (drawPathGizmos)
         {
             for (int i = 0; i < path.Count; i++)
             {
-                Gizmos.color = pathColor;
-                if (i + 1 != path.Count)
+                for (int i2 = 0; i2 < path[i].Count; i2++)
                 {
-                    if (path[i + 1].partOfStair == 1)
+                    Gizmos.color = pathColor;
+                    if (i2 + 1 != path[i].Count)
                     {
-                        Gizmos.color = Color.red;
+                        if (path[i][i2 + 1].partOfStair == 1)
+                        {
+                            Gizmos.color = Color.red;
+                        }
+                        if (path[i][i2 + 1].partOfStair == 2)
+                        {
+                            Gizmos.color = Color.yellow;
+                        }
                     }
-                    if (path[i + 1].partOfStair == 2)
-                    {
-                        Gizmos.color = Color.yellow;
-                    }
+                    Gizmos.DrawCube(path[i][i2].worldPos, Vector3.one * tileSize * 0.85f);
                 }
-                Gizmos.DrawCube(path[i].worldPos, Vector3.one * tileSize * 0.85f);
             }
         }
     }
