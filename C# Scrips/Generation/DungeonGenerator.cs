@@ -83,7 +83,7 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    public List<Node> GetNeigbours(Node node, bool disableYNodes, int3 stairDir)
+    public List<Node> GetNeigbours(Node node, bool disableYNodes)
     {
         List<Node> neigbours = new List<Node>();
 
@@ -97,14 +97,14 @@ public class DungeonGenerator : MonoBehaviour
         };
         if (disableYNodes == false)
         {
-            directions.Add(new int3(0, 1, 0) + gridPos);
-            directions.Add(new int3(0, -1, 0) + gridPos);
-        }
-
-        if (INT3.IsZero(stairDir) == false)
-        {
-            directions.Clear();
-            directions.Add(stairDir + gridPos);
+            directions.Add(new int3(2, 1, 0) + gridPos);
+            directions.Add(new int3(2, -1, 0) + gridPos);
+            directions.Add(new int3(-2, 1, 0) + gridPos);
+            directions.Add(new int3(-2, -1, 0) + gridPos);
+            directions.Add(new int3(0, 1, 2) + gridPos);
+            directions.Add(new int3(0, -1, 2) + gridPos);
+            directions.Add(new int3(0, 1, -2) + gridPos);
+            directions.Add(new int3(0, -1, -2) + gridPos);
         }
 
         foreach (int3 dir in directions)
@@ -113,7 +113,13 @@ public class DungeonGenerator : MonoBehaviour
             {
                 continue;
             }
-            neigbours.Add(grid[dir.y][dir.x, dir.z]);
+            print(dir);
+            Node targetNode = grid[dir.y][dir.x, dir.z];
+            if(dir.y != 0)
+            {
+                targetNode.isStair = true;
+            }
+            neigbours.Add(targetNode);
         }
 
         return neigbours;

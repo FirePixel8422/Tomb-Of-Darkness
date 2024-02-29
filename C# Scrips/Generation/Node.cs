@@ -18,6 +18,7 @@ public class Node : IHeapItems<Node>
 
     public int3 stairDir;
     public int stairLogicTimer;
+    public bool isStair;
 
 
     public int gCost;
@@ -34,6 +35,7 @@ public class Node : IHeapItems<Node>
     {
         walkable = true;
         partOfStair = 0;
+        isStair = false;
         stairDir = 0;
     }
 

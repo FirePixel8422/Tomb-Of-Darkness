@@ -62,10 +62,6 @@ public class PathFinding : MonoBehaviour
         while (openNodes.Count > 0)
         {
             Node currentNode = openNodes.RemoveFirst();
-            Node prevCurrentNode = grid.GetNodeFromGridPos(currentNode.parentIndex);
-
-            currentNode.stairLogicTimer = prevCurrentNode.stairLogicTimer;
-            currentNode.stairDir = prevCurrentNode.stairDir;
 
             closedNodes.Add(currentNode);
 
@@ -78,7 +74,7 @@ public class PathFinding : MonoBehaviour
             }
 
 
-            foreach (Node neigbour in grid.GetNeigbours(currentNode, stairIndex > 0, currentNode.stairDir))
+            foreach (Node neigbour in grid.GetNeigbours(currentNode, stairIndex == 0))
             {
                 if (!neigbour.walkable || closedNodes.Contains(neigbour))
                 {
@@ -88,7 +84,7 @@ public class PathFinding : MonoBehaviour
                 int3 currentNodeGridPos = currentNode.gridPos;
 
                 int neigbourDist = GetDistance(int3.zero, currentNodeGridPos, neigbour.gridPos);
-                int newMovementCostToNeigbour = currentNode.gCost + neigbourDist;
+                int newMovementCostToNeigbour = currentNode.gCost + neigbourDist + (neigbour.isStair ? 80 : 0);
                 
 
                 if (newMovementCostToNeigbour < neigbour.gCost || !openNodes.Contains(neigbour))
@@ -98,7 +94,7 @@ public class PathFinding : MonoBehaviour
                     
                     neigbour.parentIndex = currentNodeGridPos;
 
-                    if (neigbour.gridPos.x == currentNodeGridPos.x && neigbour.gridPos.z == currentNodeGridPos.z && INT3.IsZero(currentNode.stairDir))
+                    if (neigbour.gridPos.x == currentNodeGridPos.x && neigbour.gridPos.z == currentNodeGridPos.z)
                     {
                         neigbour.partOfStair = 1;
 
@@ -106,7 +102,7 @@ public class PathFinding : MonoBehaviour
                         neigbour.stairDir = new int3(dir.x, 0, dir.z);
                         neigbour.stairLogicTimer = 3;
 
-                        stairIndex = 3;
+                        stairIndex = 2;
                     }
                     if (currentNode.partOfStair == 1)
                     {
