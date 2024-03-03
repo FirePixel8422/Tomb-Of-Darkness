@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
 {
+    public static BuildingManager Instance;
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+
     public Building[] buildings;
 
     public bool fireNextGeneration;
 
+    
     private void Start()
     {
         buildings = FindObjectsOfType<Building>();
-        PathFinding.Instance.OnPathFound.AddListener(FireNextGenerationCall);
+        PathFinding.Instance.OnPathResult.AddListener(FireNextGenerationCall);
         StartCoroutine(StartGeneration());
     }
 
@@ -25,17 +33,32 @@ public class BuildingManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         PathFinding.Instance.ResetGenerationSystem();
 
-        int i = 0;
+
+
         while(true)
         {
-            buildings[i].GetPath();
-            yield return new WaitUntil(() => fireNextGeneration == true);
-            fireNextGeneration = false;
-            i += 1;
-            if(i == buildings.Length)
+
+            int buildingsDone = 0;
+            for (int i = 0; i < buildings.Length; i++)
             {
-                yield break;
+                if (buildings[i].buildingsCreated == false)
+                {
+                    buildings[i].GetPath();
+                }
+                else
+                {
+                    buildingsDone += 1;
+                }
+                yield return new WaitUntil(() => fireNextGeneration == true);
+                fireNextGeneration = false;
+            }
+
+            if(buildingsDone == buildings.Length)
+            {
+                break;
             }
         }
+        
+        print(buildings.Length + " building checked for connection");
     }
 }

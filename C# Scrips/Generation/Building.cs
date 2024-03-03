@@ -15,12 +15,20 @@ public class Building : MonoBehaviour
     public float maxDistToBuilding;
     public int maxLayerDiff;
 
+    public bool buildingsCreated;
 
-   
+
+    private void Start()
+    {
+        PathFinding.Instance.OnPathFailed.AddListener(() => buildingsCreated = false);
+        PathFinding.Instance.OnPathFound.AddListener(() => buildingsCreated = true);
+    }
 
     public void GetPath()
     {
         List<Building> _buildings = FindObjectsOfType<Building>().ToList();
+        _buildings.Remove(this);
+
         List<Building> buildings = new List<Building>();
 
         for (int i = 0; i < _buildings.Count; i++)
@@ -50,10 +58,11 @@ public class Building : MonoBehaviour
             connectedBuildings[i] = buildings[numberPot[r]];
             numberPot.RemoveAt(r);
         }
-
         for (int i = 0; i < connectedBuildings.Length; i++)
         {
-            PathFinding.Instance.FindPath(GetClosestEntrance(connectedBuildings[i].transform).position, connectedBuildings[i].transform.position);
+            Transform closestEntranceThisBuilding = GetClosestEntrance(connectedBuildings[i].transform);
+
+            PathFinding.Instance.FindPath(closestEntranceThisBuilding.position, connectedBuildings[i].GetClosestEntrance(closestEntranceThisBuilding).position);
         }
     }
 

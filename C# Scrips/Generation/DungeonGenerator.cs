@@ -15,9 +15,9 @@ public class DungeonGenerator : MonoBehaviour
 
     public bool drawGizmos;
     public Color cellColor;
-    public bool drawPathGizmos;
+
     public List<List<Node>> path = new List<List<Node>>();
-    public Color pathColor;
+    public NodeGizmo[] pathGizmoRules;
 
     public Vector3Int gridSize;
     public float tileSize;
@@ -29,17 +29,6 @@ public class DungeonGenerator : MonoBehaviour
         get
         {
             return gridSizeX * gridSizeZ;
-        }
-    }
-
-    public Transform[] points;
-
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            PathFinding.Instance.FindPath(points[0].position, points[1].position);
         }
     }
 
@@ -121,7 +110,7 @@ public class DungeonGenerator : MonoBehaviour
                 continue;
             }
             Node targetNode = grid[dir.y][dir.x, dir.z];
-            if(dir.y != 0)
+            if (dir.y != 0)
             {
                 targetNode.isStair = true;
             }
@@ -153,12 +142,17 @@ public class DungeonGenerator : MonoBehaviour
         int x = Mathf.RoundToInt((gridSizeX - 1) * percentX);
         int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
         int z = Mathf.RoundToInt((gridSizeZ - 1) * percentZ);
-        print(x + "," + y + "," + z);
+
         return grid[y][x, z];
     }
 
     public Node GetNodeFromGridPos(int3 gridPos)
     {
+        if (!IsInsideGrid(gridPos))
+        {
+            //Debug.LogError("Gridtile doesnt exist, " + gridPos);
+            return null;
+        }
         return grid[gridPos.y][gridPos.x, gridPos.z];
     }
 
@@ -187,27 +181,36 @@ public class DungeonGenerator : MonoBehaviour
                 }
             }
         }
-        if (drawPathGizmos)
+        for (int i = 0; i < path.Count; i++)
         {
-            for (int i = 0; i < path.Count; i++)
+            if (pathGizmoRules[i].visible == false)
             {
-                for (int i2 = 0; i2 < path[i].Count; i2++)
+                continue;
+            }
+            for (int i2 = 0; i2 < path[i].Count; i2++)
+            {
+                Gizmos.color = pathGizmoRules[i].color;
+                if (i2 + 1 != path[i].Count)
                 {
-                    Gizmos.color = pathColor;
-                    if (i2 + 1 != path[i].Count)
+                    if (path[i][i2 + 1].partOfStair == 1)
                     {
-                        if (path[i][i2 + 1].partOfStair == 1)
-                        {
-                            Gizmos.color = Color.red;
-                        }
-                        if (path[i][i2 + 1].partOfStair == 2)
-                        {
-                            Gizmos.color = Color.yellow;
-                        }
+                        Gizmos.color = Color.black;
                     }
-                    Gizmos.DrawCube(path[i][i2].worldPos, Vector3.one * tileSize * 0.85f);
+                    if (path[i][i2 + 1].partOfStair == 2)
+                    {
+                        Gizmos.color = Color.gray;
+                    }
                 }
+                Gizmos.DrawCube(path[i][i2].worldPos, Vector3.one * tileSize);
             }
         }
+    }
+
+
+    [System.Serializable]
+    public class NodeGizmo 
+    { 
+        public Color color;
+        public bool visible = true;
     }
 }

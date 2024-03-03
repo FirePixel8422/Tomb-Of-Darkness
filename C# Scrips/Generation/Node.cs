@@ -19,18 +19,8 @@ public class Node : IHeapItems<Node>
     public int3 stairDir;
     public int stairLogicTimer;
     public bool isStair;
+    public bool isOpen;
 
-    public bool IsBackwardsStairDir(int3 diffPos)
-    {
-        diffPos = INT3.Clamp(diffPos, -1, 1);
-        int3 clampedStairDir = -INT3.Clamp(stairDir, -1, 1);
-        if (isStair && (clampedStairDir.x == diffPos.x || clampedStairDir.z == diffPos.z))
-        {
-            Debug.Log("Succws");
-            return true;
-        }
-        return false;
-    }
 
 
     public int gCost;
