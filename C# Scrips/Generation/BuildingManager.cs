@@ -13,19 +13,13 @@ public class BuildingManager : MonoBehaviour
 
     public Building[] buildings;
 
-    public bool fireNextGeneration;
+    public int maxAttempts;
 
     
     private void Start()
     {
         buildings = FindObjectsOfType<Building>();
-        PathFinding.Instance.OnPathResult.AddListener(FireNextGenerationCall);
         StartCoroutine(StartGeneration());
-    }
-
-    public void FireNextGenerationCall()
-    {
-        fireNextGeneration = true;
     }
 
     private IEnumerator StartGeneration()
@@ -35,13 +29,14 @@ public class BuildingManager : MonoBehaviour
 
 
 
-        while(true)
+        for (int tries = 0; tries < maxAttempts; tries++)
         {
+            print("(Re)Generation Attempt: " + (tries + 1));
 
             int buildingsDone = 0;
             for (int i = 0; i < buildings.Length; i++)
             {
-                if (buildings[i].buildingsCreated == false)
+                if (buildings[i].DoneBuilding == false)
                 {
                     buildings[i].GetPath();
                 }
@@ -49,16 +44,16 @@ public class BuildingManager : MonoBehaviour
                 {
                     buildingsDone += 1;
                 }
-                yield return new WaitUntil(() => fireNextGeneration == true);
-                fireNextGeneration = false;
             }
 
-            if(buildingsDone == buildings.Length)
+            if (buildingsDone == buildings.Length)
             {
-                break;
+                print("All " + buildings.Length + " checked and generated succesfully");
+                yield break;
             }
+            yield return new WaitForSeconds(1);
         }
         
-        print(buildings.Length + " building checked for connection");
+        print(buildings.Length + " buildings checked for connection, failed, Cycle done...");
     }
 }

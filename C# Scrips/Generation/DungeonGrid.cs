@@ -4,9 +4,9 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class DungeonGenerator : MonoBehaviour
+public class DungeonGrid : MonoBehaviour
 {
-    public static DungeonGenerator Instance;
+    public static DungeonGrid Instance;
     private void Awake()
     {
         Instance = this;
@@ -150,7 +150,6 @@ public class DungeonGenerator : MonoBehaviour
     {
         if (!IsInsideGrid(gridPos))
         {
-            //Debug.LogError("Gridtile doesnt exist, " + gridPos);
             return null;
         }
         return grid[gridPos.y][gridPos.x, gridPos.z];
@@ -183,13 +182,19 @@ public class DungeonGenerator : MonoBehaviour
         }
         for (int i = 0; i < path.Count; i++)
         {
-            if (pathGizmoRules[i].visible == false)
+            int gizmoIndex = i;
+            while (gizmoIndex >= pathGizmoRules.Length)
+            {
+                gizmoIndex -= pathGizmoRules.Length;
+            }
+
+            if (pathGizmoRules[gizmoIndex].visible == false)
             {
                 continue;
             }
             for (int i2 = 0; i2 < path[i].Count; i2++)
             {
-                Gizmos.color = pathGizmoRules[i].color;
+                Gizmos.color = pathGizmoRules[gizmoIndex].color;
                 if (i2 + 1 != path[i].Count)
                 {
                     if (path[i][i2 + 1].partOfStair == 1)

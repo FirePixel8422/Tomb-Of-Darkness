@@ -13,15 +13,11 @@ public class PathFinding : MonoBehaviour
         Instance = this;
     }
 
-    public UnityEvent OnPathFound;
-    public UnityEvent OnPathFailed;
-    public UnityEvent OnPathResult;
-
     public float totalMsLoadTime;
 
 
     [HideInInspector]
-    public DungeonGenerator grid;
+    public DungeonGrid grid;
 
     public List<Node> path;
 
@@ -33,7 +29,7 @@ public class PathFinding : MonoBehaviour
 
     private void Start()
     {
-        grid = DungeonGenerator.Instance;
+        grid = DungeonGrid.Instance;
         grid.Init();
     }
     public void ResetGenerationSystem()
@@ -50,8 +46,10 @@ public class PathFinding : MonoBehaviour
             }
         }
     }
-    public void FindPath(Vector3 startPos, Vector3 targetPos)
+    public void FindPath(Vector3 startPos, Vector3 targetPos, out int buildingResult)
     {
+        buildingResult = 0;
+
         Stopwatch sw = new Stopwatch();
         sw.Start();
         Node startNode = grid.NodeFromWorldPoint(startPos);
@@ -61,25 +59,17 @@ public class PathFinding : MonoBehaviour
         Heap<Node> openNodes = new Heap<Node>(grid.MaxSize);
         HashSet<Node> closedNodes = new HashSet<Node>();
 
-        Node currentNode;
-
-        int stairIndex = 0;
 
         openNodes.Add(startNode);
         while (openNodes.Count > 0)
         {
-            currentNode = openNodes.RemoveFirst();
+            Node currentNode = openNodes.RemoveFirst();
 
             closedNodes.Add(currentNode);
 
-            /*if (currentNode.isStair)
-            {
-                closedNodes.Add(grid.GetNodeFromGridPos(
-                    INT3.Difference(currentNode.gridPos, INT3.Clamp(new int3(currentNode.stairDir.x, 0, currentNode.stairDir.z), -1, 1))));
-            }*/
-
             if (currentNode == targetNode)
             {
+                buildingResult = 1;
                 RetracePath(startNode, targetNode);
                 sw.Stop();
                 print("Path Found in " + sw.ElapsedMilliseconds + " ms");
@@ -88,14 +78,13 @@ public class PathFinding : MonoBehaviour
             }
 
             int stairDirection = 0;
-            if (stairIndex == 0 && currentNode.isStair == false)
+            if (currentNode.isStair == false)
             {
                 stairDirection = grid.GetNodeFromGridPos(currentNode.parentIndex).gridPos.y - currentNode.gridPos.y == 1 ? 1 : -1;
             }
 
             foreach (Node neigbour in grid.GetNeigbours(currentNode, stairDirection))
             {
-                int3 diffPos = INT3.Difference(currentNode.gridPos, neigbour.gridPos);
                 if (!neigbour.walkable || closedNodes.Contains(neigbour))
                 {
                     continue;
@@ -103,9 +92,12 @@ public class PathFinding : MonoBehaviour
 
                 int3 currentNodeGridPos = currentNode.gridPos;
 
-                int neigbourDist = neigbour.isOpen ? UnityEngine.Random.Range(10, 16) : GetDistance(int3.zero, currentNodeGridPos, neigbour.gridPos);
-                int newMovementCostToNeigbour = currentNode.gCost + neigbourDist + (neigbour.isStair && !neigbour.isOpen ? 200 : 0);
-
+                int neigbourDist = GetDistance(int3.zero, currentNodeGridPos, neigbour.gridPos);
+                int newMovementCostToNeigbour = currentNode.gCost + neigbourDist + (neigbour.isStair && !neigbour.isOpen ? -10 : 0);
+                if (neigbour.isOpen)
+                {
+                    newMovementCostToNeigbour = -50;
+                }
 
                 if (newMovementCostToNeigbour < neigbour.gCost || !openNodes.Contains(neigbour))
                 {
@@ -120,7 +112,6 @@ public class PathFinding : MonoBehaviour
 
                         int3 dir = INT3.Difference(neigbour.gridPos, currentNode.gridPos);
                         neigbour.stairDir = new int3(dir.x, dir.y, dir.z);
-                        stairIndex = 10;
                     }
                     if (currentNode.partOfStair == 1)
                     {
@@ -134,16 +125,25 @@ public class PathFinding : MonoBehaviour
                     }
                 }
             }
-            stairIndex -= 1;
         }
-        OnPathFailed.Invoke();
-        OnPathResult.Invoke();
+        print("Path Failed");
     }
+
+    private int GetDistance(int3 mod, int3 gridPosA, int3 gridPosB)
+    {
+        int distX = Mathf.Abs(gridPosA.x - gridPosB.x);
+        int distY = Mathf.Abs(gridPosA.y - gridPosB.y);
+        int distZ = Mathf.Abs(gridPosA.z - gridPosB.z);
+
+        return distX * UnityEngine.Random.Range(9, 12)
+            + distY * 30
+            + distZ * UnityEngine.Random.Range(9, 12);
+    }
+
+
+
     private void RetracePath(Node startNode, Node endNode)
     {
-        OnPathFound.Invoke();
-        OnPathResult.Invoke();
-
         List<Node> path = new List<Node>();
         Node currentNode = endNode;
         while (currentNode != startNode)
@@ -162,7 +162,7 @@ public class PathFinding : MonoBehaviour
                 };
                 for (int i = 0; i < disableNodeDirections.Length; i++)
                 {
-                    if(currentNode == null)
+                    if (currentNode == null)
                     {
                         print("currentnode is null");
                     }
@@ -179,18 +179,5 @@ public class PathFinding : MonoBehaviour
         path.Reverse();
 
         grid.path.Add(path);
-    }
-
-
-
-    private int GetDistance(int3 mod, int3 gridPosA, int3 gridPosB)
-    {
-        int distX = Mathf.Abs(gridPosA.x - gridPosB.x);
-        int distY = Mathf.Abs(gridPosA.y - gridPosB.y);
-        int distZ = Mathf.Abs(gridPosA.z - gridPosB.z);
-
-        return distX * distX == distZ ? UnityEngine.Random.Range(9,12) : 10
-            + distY * 30
-            + distZ * distZ == distX ? UnityEngine.Random.Range(9, 12) : 10;
     }
 }
