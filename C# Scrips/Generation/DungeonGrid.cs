@@ -12,11 +12,14 @@ public class DungeonGrid : MonoBehaviour
         Instance = this;
     }
 
+    public GameObject cube;
+
 
     public bool drawGizmos;
     public Color cellColor;
 
     public List<List<Node>> path = new List<List<Node>>();
+    public bool displayPathGizmos;
     public NodeGizmo[] pathGizmoRules;
 
     public Vector3Int gridSize;
@@ -29,6 +32,16 @@ public class DungeonGrid : MonoBehaviour
         get
         {
             return gridSizeX * gridSizeZ;
+        }
+    }
+
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SpawnCubes();
         }
     }
 
@@ -180,6 +193,42 @@ public class DungeonGrid : MonoBehaviour
                 }
             }
         }
+        if (displayPathGizmos)
+        {
+            for (int i = 0; i < path.Count; i++)
+            {
+                int gizmoIndex = i;
+                while (gizmoIndex >= pathGizmoRules.Length)
+                {
+                    gizmoIndex -= pathGizmoRules.Length;
+                }
+
+                if (pathGizmoRules[gizmoIndex].visible == false)
+                {
+                    continue;
+                }
+                for (int i2 = 0; i2 < path[i].Count; i2++)
+                {
+                    Gizmos.color = pathGizmoRules[gizmoIndex].color;
+                    if (i2 + 1 != path[i].Count)
+                    {
+                        if (path[i][i2 + 1].partOfStair == 1)
+                        {
+                            Gizmos.color = Color.black;
+                        }
+                        if (path[i][i2 + 1].partOfStair == 2)
+                        {
+                            Gizmos.color = Color.gray;
+                        }
+                    }
+                    Gizmos.DrawCube(path[i][i2].worldPos, Vector3.one * tileSize);
+                }
+            }
+        }
+    }
+
+    public void SpawnCubes()
+    {
         for (int i = 0; i < path.Count; i++)
         {
             int gizmoIndex = i;
@@ -187,26 +236,25 @@ public class DungeonGrid : MonoBehaviour
             {
                 gizmoIndex -= pathGizmoRules.Length;
             }
-
-            if (pathGizmoRules[gizmoIndex].visible == false)
-            {
-                continue;
-            }
             for (int i2 = 0; i2 < path[i].Count; i2++)
             {
-                Gizmos.color = pathGizmoRules[gizmoIndex].color;
-                if (i2 + 1 != path[i].Count)
+                Node node = GetNodeFromGridPos(path[i][i2].gridPos);
+                if (node.tile == null)
                 {
-                    if (path[i][i2 + 1].partOfStair == 1)
+                    node.tile = Instantiate(cube, path[i][i2].worldPos, Quaternion.identity);
+
+                    if (i2 + 1 != path[i].Count)
                     {
-                        Gizmos.color = Color.black;
-                    }
-                    if (path[i][i2 + 1].partOfStair == 2)
-                    {
-                        Gizmos.color = Color.gray;
+                        if (path[i][i2 + 1].partOfStair == 1)
+                        {
+                            node.tile.GetComponent<Renderer>().material.color = Color.black;
+                        }
+                        if (path[i][i2 + 1].partOfStair == 2)
+                        {
+                            node.tile.GetComponent<Renderer>().material.color = Color.gray;
+                        }
                     }
                 }
-                Gizmos.DrawCube(path[i][i2].worldPos, Vector3.one * tileSize);
             }
         }
     }

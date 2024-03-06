@@ -49,11 +49,13 @@ public class BuildingManager : MonoBehaviour
             if (buildingsDone == buildings.Length)
             {
                 print("All " + buildings.Length + " checked and generated succesfully");
+                DungeonGrid.Instance.SpawnCubes();
                 yield break;
             }
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(.35f);
         }
         
         print(buildings.Length + " buildings checked for connection, failed, Cycle done...");
+        DungeonGrid.Instance.SpawnCubes();
     }
 }

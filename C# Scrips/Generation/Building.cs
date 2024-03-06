@@ -55,7 +55,7 @@ public class Building : MonoBehaviour
 
     public void GetPath()
     {
-        if (connectedBuildings.Count == 0)
+        if (connectedBuildings.Count == 0 && Full == false)
         {
             CreateConnections();
         }
@@ -89,7 +89,7 @@ public class Building : MonoBehaviour
         {
             Transform closestEntrance = _buildings[i].GetClosestEntrance(transform);
             if (Vector3.Distance(closestEntrance.position, transform.position) < maxDistToBuilding
-                && Mathf.Abs(_buildings[i].gridPos.y) - Mathf.Abs(gridPos.y) < maxLayerDiff
+                && (Mathf.Abs(_buildings[i].gridPos.y) - Mathf.Abs(gridPos.y)) < maxLayerDiff
                 && _buildings[i].connectedBuildings.Contains(this) == false
                 && _buildings[i].Full == false)
             {
