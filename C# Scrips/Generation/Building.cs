@@ -10,6 +10,8 @@ public class Building : MonoBehaviour
     public List<Building> connectedBuildings;
     public List<int> buildingsCreated;
 
+    public List<List<Node>> paths;
+
 
     public int3 gridPos;
 
@@ -46,10 +48,13 @@ public class Building : MonoBehaviour
     }
 
 
-    private void Start()
+    public void SetupBuilding()
     {
         connectedBuildings = new List<Building>(maxConnections);
         buildingsCreated = new List<int>(maxConnections);
+        paths = new List<List<Node>>(maxConnections);
+
+        DungeonGrid.Instance.NodeFromWorldPoint(transform.position).walkable = false;
     }
 
 
@@ -61,7 +66,6 @@ public class Building : MonoBehaviour
         }
 
 
-
         for (int i = 0; i < connectedBuildings.Count; i++)
         {
             if (buildingsCreated[i] == 1)
@@ -70,9 +74,9 @@ public class Building : MonoBehaviour
             }
             Transform closestEntranceThisBuilding = GetClosestEntrance(connectedBuildings[i].transform);
 
-            PathFinding.Instance.FindPath(closestEntranceThisBuilding.position,
+            paths.Add(PathFinding.Instance.FindPath(closestEntranceThisBuilding.position,
                 connectedBuildings[i].GetClosestEntrance(closestEntranceThisBuilding).position,
-                out int tempInt);
+                out int tempInt));
             buildingsCreated[i] = tempInt;
         }
     }

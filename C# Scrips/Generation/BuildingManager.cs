@@ -14,6 +14,7 @@ public class BuildingManager : MonoBehaviour
     public Building[] buildings;
 
     public int maxAttempts;
+    public int cAttempts;
 
     
     private void Start()
@@ -24,37 +25,63 @@ public class BuildingManager : MonoBehaviour
 
     private IEnumerator StartGeneration()
     {
-        yield return new WaitForSeconds(0.1f);
-        PathFinding.Instance.ResetGenerationSystem();
-
-
-
-        for (int tries = 0; tries < maxAttempts; tries++)
+        for (int currentAttempt = 0; currentAttempt < maxAttempts; currentAttempt++)
         {
-            print("(Re)Generation Attempt: " + (tries + 1));
+            cAttempts = currentAttempt;
 
-            int buildingsDone = 0;
+            yield return new WaitForSeconds(0.1f);
+            PathFinding.Instance.ResetGenerationSystem();
+
+
             for (int i = 0; i < buildings.Length; i++)
             {
-                if (buildings[i].DoneBuilding == false)
-                {
-                    buildings[i].GetPath();
-                }
-                else
-                {
-                    buildingsDone += 1;
-                }
+                buildings[i].SetupBuilding();
             }
 
-            if (buildingsDone == buildings.Length)
+            for (int tries = 0; tries < 5; tries++)
+            {
+                int buildingsDone = 0;
+                for (int i = 0; i < buildings.Length; i++)
+                {
+                    if (buildings[i].DoneBuilding == false)
+                    {
+                        buildings[i].GetPath();
+                    }
+                    else
+                    {
+                        buildingsDone += 1;
+                    }
+                }
+
+                if (buildingsDone == buildings.Length)
+                {
+                    print("All " + buildings.Length + " checked and generated succesfully");
+                    DungeonGrid.Instance.SpawnCubes();
+                    yield break;
+                }
+                yield return new WaitForSeconds((buildings.Length - buildingsDone) / 15);
+            }
+
+
+
+            int succes = 0;
+            for (int i = 0; i < buildings.Length; i++)
+            {
+                if (buildings[i].buildingsCreated.Contains(1))
+                {
+                    succes += 1;
+                }
+            }
+            if(succes == buildings.Length)
             {
                 print("All " + buildings.Length + " checked and generated succesfully");
                 DungeonGrid.Instance.SpawnCubes();
                 yield break;
             }
-            yield return new WaitForSeconds(.35f);
         }
-        
+
+
+
         print(buildings.Length + " buildings checked for connection, failed, Cycle done...");
         DungeonGrid.Instance.SpawnCubes();
     }

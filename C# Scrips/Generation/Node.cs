@@ -18,8 +18,9 @@ public class Node : IHeapItems<Node>
     public int3 parentIndex;
     public int partOfStair;
 
+    public List<int3> stairDirList;
     public int3 stairDir;
-    public int stairLogicTimer;
+
     public bool isStair;
     public bool isOpen;
 
@@ -40,6 +41,9 @@ public class Node : IHeapItems<Node>
         walkable = true;
         partOfStair = 0;
         isStair = false;
+        isOpen = false;
+        isStair = false;
+        stairDirList = new List<int3>(4);
         stairDir = 0;
     }
 

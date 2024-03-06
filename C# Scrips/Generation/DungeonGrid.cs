@@ -12,13 +12,14 @@ public class DungeonGrid : MonoBehaviour
         Instance = this;
     }
 
+    public Building[] buildings;
+
     public GameObject cube;
 
 
     public bool drawGizmos;
     public Color cellColor;
 
-    public List<List<Node>> path = new List<List<Node>>();
     public bool displayPathGizmos;
     public NodeGizmo[] pathGizmoRules;
 
@@ -98,7 +99,6 @@ public class DungeonGrid : MonoBehaviour
             new int3(0, 0, -1) + gridPos,
         };
 
-
         if (getStairDirection == 1)
         {
             directions.Add(new int3(3, 1, 0) + gridPos);
@@ -173,6 +173,8 @@ public class DungeonGrid : MonoBehaviour
 
     public void OnDrawGizmos()
     {
+        buildings = FindObjectsOfType<Building>();
+
         Gizmos.color = cellColor;
         Gizmos.DrawWireCube(Vector3.zero, new Vector3(gridSize.x, gridSize.y, gridSize.z));
 
@@ -195,7 +197,7 @@ public class DungeonGrid : MonoBehaviour
         }
         if (displayPathGizmos)
         {
-            for (int i = 0; i < path.Count; i++)
+            for (int i = 0; i < buildings.Length; i++)
             {
                 int gizmoIndex = i;
                 while (gizmoIndex >= pathGizmoRules.Length)
@@ -207,21 +209,29 @@ public class DungeonGrid : MonoBehaviour
                 {
                     continue;
                 }
-                for (int i2 = 0; i2 < path[i].Count; i2++)
+                for (int i2 = 0; i2 < buildings[i].paths.Count; i2++)
                 {
-                    Gizmos.color = pathGizmoRules[gizmoIndex].color;
-                    if (i2 + 1 != path[i].Count)
+                    if (buildings[i].paths[i2] == null)
                     {
-                        if (path[i][i2 + 1].partOfStair == 1)
-                        {
-                            Gizmos.color = Color.black;
-                        }
-                        if (path[i][i2 + 1].partOfStair == 2)
-                        {
-                            Gizmos.color = Color.gray;
-                        }
+                        continue;
                     }
-                    Gizmos.DrawCube(path[i][i2].worldPos, Vector3.one * tileSize);
+
+                    for (int i3 = 0; i3 < buildings[i].paths[i2].Count; i3++)
+                    {
+                        Gizmos.color = pathGizmoRules[gizmoIndex].color;
+                        if (i3 + 1 != buildings[i].paths[i2].Count)
+                        {
+                            if (buildings[i].paths[i2][i3 + 1].partOfStair == 1)
+                            {
+                                Gizmos.color = Color.black;
+                            }
+                            if (buildings[i].paths[i2][i3 + 1].partOfStair == 2)
+                            {
+                                Gizmos.color = Color.gray;
+                            }
+                        }
+                        Gizmos.DrawCube(buildings[i].paths[i2][i3].worldPos, Vector3.one * tileSize);
+                    }
                 }
             }
         }
@@ -229,29 +239,62 @@ public class DungeonGrid : MonoBehaviour
 
     public void SpawnCubes()
     {
-        for (int i = 0; i < path.Count; i++)
+        buildings = FindObjectsOfType<Building>();
+        for (int i = 0; i < buildings.Length; i++)
         {
-            int gizmoIndex = i;
-            while (gizmoIndex >= pathGizmoRules.Length)
+            for (int i2 = 0; i2 < buildings[i].paths.Count; i2++)
             {
-                gizmoIndex -= pathGizmoRules.Length;
-            }
-            for (int i2 = 0; i2 < path[i].Count; i2++)
-            {
-                Node node = GetNodeFromGridPos(path[i][i2].gridPos);
-                if (node.tile == null)
+                if (buildings[i].paths[i2] == null)
                 {
-                    node.tile = Instantiate(cube, path[i][i2].worldPos, Quaternion.identity);
+                    continue;
+                }
 
-                    if (i2 + 1 != path[i].Count)
+                int gizmoIndex = i2;
+                while (gizmoIndex >= pathGizmoRules.Length)
+                {
+                    gizmoIndex -= pathGizmoRules.Length;
+                }
+
+                for (int i3 = 0; i3 < buildings[i].paths[i2].Count; i3++)
+                {
+                    Node node = GetNodeFromGridPos(buildings[i].paths[i2][i3].gridPos);
+                    if (node.tile == null)
                     {
-                        if (path[i][i2 + 1].partOfStair == 1)
+                        node.tile = Instantiate(cube, node.worldPos, Quaternion.identity);
+
+
+                        if (i3 + 1 != buildings[i].paths[i2].Count)
                         {
-                            node.tile.GetComponent<Renderer>().material.color = Color.black;
-                        }
-                        if (path[i][i2 + 1].partOfStair == 2)
-                        {
-                            node.tile.GetComponent<Renderer>().material.color = Color.gray;
+                            Node stairNode = buildings[i].paths[i2][i3 + 1];
+                            if (stairNode.isStair && stairNode.partOfStair == 1)
+                            {
+                                for (int i4 = 0; i4 < stairNode.stairDirList.Count; i4++)
+                                {
+                                    node.tile.GetComponent<Renderer>().material.color = Color.black;
+
+                                    int3 clampedStairDir = -INT3.Clamp(stairNode.stairDirList[i4], -1, 1);
+                                    int3[] disableNodeDirections = new int3[]
+                                    {
+                                        new int3(clampedStairDir.x, 0, clampedStairDir.z),
+                                        new int3(clampedStairDir.x * 2, 0, clampedStairDir.z * 2),
+                                        new int3(clampedStairDir.x, clampedStairDir.y, clampedStairDir.z),
+                                        new int3(clampedStairDir.x * 2, clampedStairDir.y, clampedStairDir.z * 2),
+                                    };
+
+                                    for (int i5 = 0; i5 < disableNodeDirections.Length; i5++)
+                                    {
+                                        Vector3 pos = GetNodeFromGridPos(disableNodeDirections[i5] + stairNode.gridPos).worldPos;
+
+                                        Instantiate(cube, pos, Quaternion.identity).
+                                            GetComponent<Renderer>().material.color = Color.blue;
+                                    }
+                                }
+                            }
+
+                            if (stairNode.partOfStair == 2)
+                            {
+                                node.tile.GetComponent<Renderer>().material.color = Color.green;
+                            }
                         }
                     }
                 }
