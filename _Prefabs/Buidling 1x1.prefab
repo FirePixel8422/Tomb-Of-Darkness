@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8338392201425354300}
   - component: {fileID: 5470868710832352693}
   - component: {fileID: 383119189787847639}
+  - component: {fileID: 6652767349752724658}
   m_Layer: 0
   m_Name: Buidling 1x1
   m_TagString: Untagged
@@ -83,3 +84,38 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6652767349752724658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6456796211017435665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1a4fbd79f5b82f4c917a9c15184c613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  node:
+    gridPos:
+      x: 0
+      y: 0
+      z: 0
+    worldPos: {x: 0, y: 0, z: 0}
+    worldTile: {fileID: 0}
+    walkable: 0
+    movementPenalty: 0
+    parentIndex:
+      x: 0
+      y: 0
+      z: 0
+    partOfStair: 0
+    stairDirList: []
+    stairDir:
+      x: 0
+      y: 0
+      z: 0
+    isStair: 0
+    isOpen: 0
+    gCost: 0
+    hCost: 0

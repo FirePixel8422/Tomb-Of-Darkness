@@ -258,21 +258,21 @@ public class DungeonGrid : MonoBehaviour
                 for (int i3 = 0; i3 < buildings[i].paths[i2].Count; i3++)
                 {
                     Node node = GetNodeFromGridPos(buildings[i].paths[i2][i3].gridPos);
-                    if (node.tile == null)
+                    if (node.worldTile == null)
                     {
-                        node.tile = Instantiate(cube, node.worldPos, Quaternion.identity);
-
+                        WorldTile worldTile = Instantiate(cube, node.worldPos, Quaternion.identity).GetComponent<WorldTile>();
+                        worldTile.node = node;
+                        node.worldTile = worldTile;
 
                         if (i3 + 1 != buildings[i].paths[i2].Count)
                         {
-                            Node stairNode = buildings[i].paths[i2][i3 + 1];
-                            if (stairNode.isStair && stairNode.partOfStair == 1)
+                            if (node.partOfStair == 1)
                             {
-                                for (int i4 = 0; i4 < stairNode.stairDirList.Count; i4++)
+                                for (int i4 = 0; i4 < node.stairDirList.Count; i4++)
                                 {
-                                    node.tile.GetComponent<Renderer>().material.color = Color.black;
+                                    worldTile.GetComponent<Renderer>().material.color = Color.black;
 
-                                    int3 clampedStairDir = -INT3.Clamp(stairNode.stairDirList[i4], -1, 1);
+                                    int3 clampedStairDir = -INT3.Clamp(node.stairDirList[i4], -1, 1);
                                     int3[] disableNodeDirections = new int3[]
                                     {
                                         new int3(clampedStairDir.x, 0, clampedStairDir.z),
@@ -283,7 +283,7 @@ public class DungeonGrid : MonoBehaviour
 
                                     for (int i5 = 0; i5 < disableNodeDirections.Length; i5++)
                                     {
-                                        Vector3 pos = GetNodeFromGridPos(disableNodeDirections[i5] + stairNode.gridPos).worldPos;
+                                        Vector3 pos = GetNodeFromGridPos(disableNodeDirections[i5] + node.gridPos).worldPos;
 
                                         Instantiate(cube, pos, Quaternion.identity).
                                             GetComponent<Renderer>().material.color = Color.blue;
@@ -291,9 +291,9 @@ public class DungeonGrid : MonoBehaviour
                                 }
                             }
 
-                            if (stairNode.partOfStair == 2)
+                            if (node.partOfStair == 2)
                             {
-                                node.tile.GetComponent<Renderer>().material.color = Color.green;
+                                worldTile.GetComponent<Renderer>().material.color = Color.green;
                             }
                         }
                     }

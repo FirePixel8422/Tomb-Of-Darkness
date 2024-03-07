@@ -9,7 +9,7 @@ public class Node : IHeapItems<Node>
     public int3 gridPos;
     public Vector3 worldPos;
 
-    public GameObject tile;
+    public WorldTile worldTile;
 
     public bool walkable;
 

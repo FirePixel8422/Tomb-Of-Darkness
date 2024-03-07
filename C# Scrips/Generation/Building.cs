@@ -38,7 +38,7 @@ public class Building : MonoBehaviour
             }
             foreach (int b in buildingsCreated)
             {
-                if (b == 0)
+                if (b != 1)
                 {
                     return false;
                 }
