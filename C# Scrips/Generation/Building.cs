@@ -20,6 +20,8 @@ public class Building : MonoBehaviour
 
     public float maxDistToBuilding;
     public int maxLayerDiff;
+    public bool forceStairs;
+    
 
     public bool Full
     {
@@ -36,16 +38,22 @@ public class Building : MonoBehaviour
             {
                 return false;
             }
+            int amount = minCreateConnections;
             foreach (int b in buildingsCreated)
             {
-                if (b != 1)
+                if (b != 0)
                 {
-                    return false;
+                    amount -= 1;
+                }
+                if (amount <= 0)
+                {
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
     }
+    public bool special;
 
 
     public void SetupBuilding()
@@ -54,13 +62,15 @@ public class Building : MonoBehaviour
         buildingsCreated = new List<int>(maxConnections);
         paths = new List<List<Node>>(maxConnections);
 
-        DungeonGrid.Instance.NodeFromWorldPoint(transform.position).walkable = false;
+        Node node = DungeonGrid.Instance.NodeFromWorldPoint(transform.position);
+            node.walkable = false;
+        gridPos = node.gridPos;
     }
 
 
     public void GetPath()
     {
-        if (connectedBuildings.Count == 0 && Full == false)
+        if ((connectedBuildings.Count == 0 && Full == false) || (buildingsCreated.Contains(0) == false && buildingsCreated.Contains(1) == false))
         {
             CreateConnections();
         }
@@ -68,7 +78,7 @@ public class Building : MonoBehaviour
 
         for (int i = 0; i < connectedBuildings.Count; i++)
         {
-            if (buildingsCreated[i] == 1)
+            if (buildingsCreated[i] != 0)
             {
                 continue;
             }
@@ -92,14 +102,25 @@ public class Building : MonoBehaviour
         for (int i = 0; i < _buildings.Count; i++)
         {
             Transform closestEntrance = _buildings[i].GetClosestEntrance(transform);
+            int layerDiff = Mathf.Abs(INT3.Difference(_buildings[i].gridPos, gridPos).y);
+            if (special)
+            {
+                print(layerDiff);
+            }
+
+            if (forceStairs && layerDiff == 0)
+            {
+                continue;
+            }
             if (Vector3.Distance(closestEntrance.position, transform.position) < maxDistToBuilding
-                && (Mathf.Abs(_buildings[i].gridPos.y) - Mathf.Abs(gridPos.y)) < maxLayerDiff
+                && layerDiff <= maxLayerDiff
                 && _buildings[i].connectedBuildings.Contains(this) == false
                 && _buildings[i].Full == false)
             {
                 buildings.Add(_buildings[i]);
             }
         }
+
 
         int connections = UnityEngine.Random.Range(minCreateConnections, maxCreateConnections + 1);
         int amount = Mathf.Min(new int[] { connections, buildings.Count, maxConnections - connectedBuildings.Count});

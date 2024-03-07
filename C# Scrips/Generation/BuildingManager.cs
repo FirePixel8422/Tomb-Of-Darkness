@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
@@ -11,7 +13,7 @@ public class BuildingManager : MonoBehaviour
     }
 
 
-    public Building[] buildings;
+    public List<Building> buildings;
 
     public int maxAttempts;
     public int cAttempts;
@@ -19,7 +21,7 @@ public class BuildingManager : MonoBehaviour
     
     private void Start()
     {
-        buildings = FindObjectsOfType<Building>();
+        buildings = FindObjectsOfType<Building>().ToList();
         StartCoroutine(StartGeneration());
     }
 
@@ -27,21 +29,24 @@ public class BuildingManager : MonoBehaviour
     {
         for (int currentAttempt = 0; currentAttempt < maxAttempts; currentAttempt++)
         {
-            cAttempts = currentAttempt;
+            cAttempts = currentAttempt + 1;
 
             yield return new WaitForSeconds(0.1f);
             PathFinding.Instance.ResetGenerationSystem();
 
-
-            for (int i = 0; i < buildings.Length; i++)
+            for (int i = 0; i < buildings.Count; i++)
             {
                 buildings[i].SetupBuilding();
             }
+            
 
-            for (int tries = 0; tries < 5; tries++)
+            SortBuildings(out buildings);
+
+
+            for (int tries = 0; tries < 10; tries++)
             {
                 int buildingsDone = 0;
-                for (int i = 0; i < buildings.Length; i++)
+                for (int i = 0; i < buildings.Count; i++)
                 {
                     if (buildings[i].DoneBuilding == false)
                     {
@@ -53,28 +58,28 @@ public class BuildingManager : MonoBehaviour
                     }
                 }
 
-                if (buildingsDone == buildings.Length)
+                if (buildingsDone == buildings.Count)
                 {
-                    print("All " + buildings.Length + " checked and generated succesfully");
+                    print("All " + buildings.Count + " checked and generated succesfully");
                     DungeonGrid.Instance.SpawnCubes();
                     yield break;
                 }
-                yield return new WaitForSeconds((buildings.Length - buildingsDone) / 15);
+                yield return new WaitForSeconds((buildings.Count - buildingsDone) / 15);
             }
 
 
 
             int succes = 0;
-            for (int i = 0; i < buildings.Length; i++)
+            for (int i = 0; i < buildings.Count; i++)
             {
                 if (buildings[i].buildingsCreated.Contains(1))
                 {
                     succes += 1;
                 }
             }
-            if(succes == buildings.Length)
+            if(succes == buildings.Count)
             {
-                print("All " + buildings.Length + " checked and generated succesfully");
+                print("All " + buildings.Count + " checked and generated succesfully");
                 DungeonGrid.Instance.SpawnCubes();
                 yield break;
             }
@@ -82,7 +87,32 @@ public class BuildingManager : MonoBehaviour
 
 
 
-        print(buildings.Length + " buildings checked for connection, failed, Cycle done...");
+        print(buildings.Count + " buildings checked for connection, failed, Cycle done...");
         DungeonGrid.Instance.SpawnCubes();
+    }
+
+
+    public void SortBuildings(out List<Building> buildings)
+    {
+        List<Building> sortedList = new List<Building>();
+        buildings = this.buildings.ToList();
+        
+        while (buildings.Count != 0)
+        {
+            int lowest = 100;
+            int index = 0;
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                if (buildings[i].gridPos.y < lowest || buildings[i].forceStairs)
+                {
+                    lowest = buildings[i].gridPos.y;
+                    index = i;
+                }
+            }
+            sortedList.Add(buildings[index]);
+            buildings.RemoveAt(index);
+        }
+
+        buildings = sortedList;
     }
 }

@@ -261,8 +261,19 @@ public class DungeonGrid : MonoBehaviour
                     if (node.worldTile == null)
                     {
                         WorldTile worldTile = Instantiate(cube, node.worldPos, Quaternion.identity).GetComponent<WorldTile>();
+                        //worldTile.GetComponent<Renderer>().material.color = pathGizmoRules[gizmoIndex].color;
+
                         worldTile.node = node;
                         node.worldTile = worldTile;
+
+                        if (node.worldPos.y == 0)
+                        {
+                            worldTile.GetComponent<Renderer>().material.color = Color.gray;
+                        }
+                        if (node.worldPos.y == -2)
+                        {
+                            worldTile.GetComponent<Renderer>().material.color = Color.yellow;
+                        }
 
                         if (i3 + 1 != buildings[i].paths[i2].Count)
                         {
@@ -283,10 +294,12 @@ public class DungeonGrid : MonoBehaviour
 
                                     for (int i5 = 0; i5 < disableNodeDirections.Length; i5++)
                                     {
-                                        Vector3 pos = GetNodeFromGridPos(disableNodeDirections[i5] + node.gridPos).worldPos;
+                                        Node stairNode = GetNodeFromGridPos(disableNodeDirections[i5] + node.gridPos);
 
-                                        Instantiate(cube, pos, Quaternion.identity).
-                                            GetComponent<Renderer>().material.color = Color.blue;
+                                        WorldTile stairPart = Instantiate(cube, stairNode.worldPos, Quaternion.identity).GetComponent<WorldTile>();
+                                        stairPart.GetComponent<Renderer>().material.color = Color.blue;
+                                        node.worldTile = stairPart;
+                                        stairPart.node = stairNode;
                                     }
                                 }
                             }

@@ -122,7 +122,7 @@ public class PathFinding : MonoBehaviour
                             break;
                         }
                         Node node = grid.GetNodeFromGridPos(disableNodeDirections[i] + neigbour.gridPos);
-                        if ((node.walkable == true && node.isOpen == false) || (currentNode.isStair && (-INT3.Clamp(currentNode.stairDir, -1, 1)).Equals(clampedStairDir)))
+                        if ((node.walkable == true && node.isOpen == false) || (currentNode.isStair && INT3.Clamp(currentNode.stairDir, -1, 1).Equals(clampedStairDir)))
                         {
                             amountOfTilesAvailable += 1;
                         }
@@ -136,13 +136,13 @@ public class PathFinding : MonoBehaviour
                 int3 currentNodeGridPos = currentNode.gridPos;
 
                 int neigbourDist = GetDistance(int3.zero, currentNodeGridPos, neigbour.gridPos);
-                int newMovementCostToNeigbour = currentNode.gCost + neigbourDist + (neigbour.isOpen ? -105 : 0) + (neigbour.isStair ? +20 : 0);
+                int newMovementCostToNeigbour = currentNode.gCost + neigbourDist + (neigbour.isOpen ? -10 : 0) + (neigbour.isStair ? +20 : 0);
 
 
                 if (newMovementCostToNeigbour < neigbour.gCost || !openNodes.Contains(neigbour))
                 {
                     neigbour.gCost = newMovementCostToNeigbour;
-                    neigbour.hCost = GetDistance(int3.zero, neigbour.gridPos, targetNode.gridPos) + (neigbour.isOpen ? -105 : 0) + (neigbour.isStair ? +20 : 0);
+                    neigbour.hCost = GetDistance(int3.zero, neigbour.gridPos, targetNode.gridPos) + (neigbour.isOpen ? -10 : 0) + (neigbour.isStair ? +20 : 0);
 
                     neigbour.parentIndex = currentNodeGridPos;
 
@@ -177,9 +177,9 @@ public class PathFinding : MonoBehaviour
         int distY = Mathf.Abs(gridPosA.y - gridPosB.y);
         int distZ = Mathf.Abs(gridPosA.z - gridPosB.z);
 
-        return distX * 10// + UnityEngine.Random.Range(0, 2)
+        return distX * 10 + UnityEngine.Random.Range(0, 2)
             + distY * 20
-            + distZ * 10;// + UnityEngine.Random.Range(-1, 1);
+            + distZ * 10 + UnityEngine.Random.Range(-1, 1);
     }
 
 
