@@ -1,9 +1,7 @@
-using JetBrains.Annotations;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class PathFinding : MonoBehaviour
 {
@@ -190,6 +188,21 @@ public class PathFinding : MonoBehaviour
         Node currentNode = endNode;
         while (currentNode != startNode)
         {
+            Node parent = grid.GetNodeFromGridPos(currentNode.parentIndex);
+
+            int3 diff = INT3.Subtract(currentNode.gridPos, parent.gridPos);
+            if (currentNode.worldTileEntrances.Contains(new int2(diff.x, diff.z)) == false)
+            {
+                currentNode.worldTileEntrances.Add(new int2(diff.x, diff.z));
+            }
+
+            
+            diff = INT3.Subtract(parent.gridPos, currentNode.gridPos);
+            if (parent.worldTileEntrances.Contains(new int2(diff.x, diff.z)) == false)
+            {
+                parent.worldTileEntrances.Add(new int2(diff.x, diff.z));
+            }
+
             if (currentNode.partOfStair == 1)
             {
                 currentNode.stairDirList.Add(currentNode.stairDir);

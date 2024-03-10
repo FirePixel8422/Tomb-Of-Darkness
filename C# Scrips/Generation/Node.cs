@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -20,6 +21,8 @@ public class Node : IHeapItems<Node>
 
     public List<int3> stairDirList;
     public int3 stairDir;
+
+    public List<int2> worldTileEntrances;
 
     public bool isStair;
     public bool isOpen;
@@ -44,6 +47,7 @@ public class Node : IHeapItems<Node>
         isOpen = false;
         isStair = false;
         stairDirList = new List<int3>(4);
+        worldTileEntrances = new List<int2>(4);
         stairDir = 0;
     }
 

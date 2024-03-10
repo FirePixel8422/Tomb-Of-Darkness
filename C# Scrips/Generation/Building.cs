@@ -21,7 +21,8 @@ public class Building : MonoBehaviour
     public float maxDistToBuilding;
     public int maxLayerDiff;
     public bool forceStairs;
-    
+
+    public GameObject cube;
 
     public bool Full
     {
@@ -62,9 +63,34 @@ public class Building : MonoBehaviour
         buildingsCreated = new List<int>(maxConnections);
         paths = new List<List<Node>>(maxConnections);
 
-        Node node = DungeonGrid.Instance.NodeFromWorldPoint(transform.position);
-            node.walkable = false;
-        gridPos = node.gridPos;
+        gridPos = DungeonGrid.Instance.NodeFromWorldPoint(transform.position).gridPos;
+
+        float tileSize = DungeonGrid.Instance.tileSize;
+
+        Vector3 bottomLeft = transform.position
+            - Vector3.right * transform.localScale.x / tileSize / 2
+            - Vector3.forward * transform.localScale.z / tileSize / 2;
+
+        for (int x = 0; x < transform.localScale.x / tileSize; x++)
+        {
+            for (int y = 0; y < transform.localScale.y / tileSize; y++)
+            {
+                for (int z = 0; z < transform.localScale.z / tileSize; z++)
+                {
+                    Node node = DungeonGrid.Instance.NodeFromWorldPoint(bottomLeft
+                        + Vector3.right * (x * tileSize - tileSize / 2) + Vector3.forward * (z * tileSize - tileSize / 2));
+                    node.walkable = false;
+
+                    if (special)
+                    {
+                        Node noder = DungeonGrid.Instance.NodeFromWorldPoint(bottomLeft
+                        + new Vector3(x * tileSize - tileSize / 2, 0, z * tileSize - tileSize / 2));
+                        print(noder.worldPos);
+                        Instantiate(cube, node.worldPos, Quaternion.identity);
+                    }
+                }
+            }
+        }
     }
 
 
@@ -102,11 +128,7 @@ public class Building : MonoBehaviour
         for (int i = 0; i < _buildings.Count; i++)
         {
             Transform closestEntrance = _buildings[i].GetClosestEntrance(transform);
-            int layerDiff = Mathf.Abs(INT3.Difference(_buildings[i].gridPos, gridPos).y);
-            if (special)
-            {
-                print(layerDiff);
-            }
+            int layerDiff = INT3.Difference(_buildings[i].gridPos, gridPos).y;
 
             if (forceStairs && layerDiff == 0)
             {
