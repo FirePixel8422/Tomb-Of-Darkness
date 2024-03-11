@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -43,7 +44,7 @@ public class PathFinding : MonoBehaviour
             }
         }
     }
-    public List<Node> FindPath(Vector3 startPos, Vector3 targetPos, out int buildingResult)
+    public List<Node> FindPath(Vector3 startPos, Vector3 targetPos, int2 startNodeDir, int2 endNodeDir, out int buildingResult)
     {
         buildingResult = 0;
 
@@ -84,7 +85,7 @@ public class PathFinding : MonoBehaviour
                 totalMsLoadTime += sw.ElapsedMilliseconds;
 
                 buildingResult = 1;
-                return RetracePath(startNode, targetNode);
+                return RetracePath(startNode, targetNode, -startNodeDir, -endNodeDir);
             }
 
             int stairDirection = 0;
@@ -103,7 +104,7 @@ public class PathFinding : MonoBehaviour
 
                 if (neigbour.gridPos.y - currentNode.gridPos.y != 0)
                 {
-                    int3 clampedStairDir = -INT3.Clamp(INT3.Difference(neigbour.gridPos, currentNode.gridPos), -1, 1);
+                    int3 clampedStairDir = -INT_Logic.Clamp(INT_Logic.Difference(neigbour.gridPos, currentNode.gridPos), -1, 1);
                     int3[] disableNodeDirections = new int3[]
                     {
                         new int3(clampedStairDir.x, 0, clampedStairDir.z),
@@ -120,7 +121,7 @@ public class PathFinding : MonoBehaviour
                             break;
                         }
                         Node node = grid.GetNodeFromGridPos(disableNodeDirections[i] + neigbour.gridPos);
-                        if ((node.walkable == true && node.isOpen == false) || (currentNode.isStair && INT3.Clamp(currentNode.stairDir, -1, 1).Equals(clampedStairDir)))
+                        if ((node.walkable == true && node.isOpen == false) || (currentNode.isStair && INT_Logic.Clamp(currentNode.stairDir, -1, 1).Equals(clampedStairDir)))
                         {
                             amountOfTilesAvailable += 1;
                         }
@@ -148,7 +149,7 @@ public class PathFinding : MonoBehaviour
                     {
                         neigbour.partOfStair = 1;
 
-                        int3 dir = INT3.Difference(neigbour.gridPos, currentNode.gridPos);
+                        int3 dir = INT_Logic.Difference(neigbour.gridPos, currentNode.gridPos);
                         neigbour.stairDir = new int3(dir.x, dir.y, dir.z);
                     }
                     if (currentNode.partOfStair == 1)
@@ -182,32 +183,33 @@ public class PathFinding : MonoBehaviour
 
 
 
-    private List<Node> RetracePath(Node startNode, Node endNode)
+    private List<Node> RetracePath(Node startNode, Node endNode, int2 startNodeDir, int2 endNodeDir)
     {
         List<Node> path = new List<Node>();
         Node currentNode = endNode;
+
         while (currentNode != startNode)
         {
             Node parent = grid.GetNodeFromGridPos(currentNode.parentIndex);
 
-            int3 diff = INT3.Subtract(currentNode.gridPos, parent.gridPos);
+            int3 diff = -INT_Logic.Subtract(currentNode.gridPos, parent.gridPos);
             if (currentNode.worldTileEntrances.Contains(new int2(diff.x, diff.z)) == false)
             {
                 currentNode.worldTileEntrances.Add(new int2(diff.x, diff.z));
-            }
-
-            
-            diff = INT3.Subtract(parent.gridPos, currentNode.gridPos);
+            }            
+            diff = -INT_Logic.Subtract(parent.gridPos, currentNode.gridPos);
             if (parent.worldTileEntrances.Contains(new int2(diff.x, diff.z)) == false)
             {
                 parent.worldTileEntrances.Add(new int2(diff.x, diff.z));
             }
 
+
+
             if (currentNode.partOfStair == 1)
             {
                 currentNode.stairDirList.Add(currentNode.stairDir);
 
-                int3 clampedStairDir = -INT3.Clamp(currentNode.stairDir, -1, 1);
+                int3 clampedStairDir = -INT_Logic.Clamp(currentNode.stairDir, -1, 1);
                 int3[] disableNodeDirections = new int3[]
                 {
                     new int3(clampedStairDir.x, 0, clampedStairDir.z),
@@ -227,6 +229,16 @@ public class PathFinding : MonoBehaviour
         }
         path.Add(startNode);
         startNode.isOpen = true;
+
+        if (startNode.worldTileEntrances.Contains(startNodeDir) == false)
+        {
+            startNode.worldTileEntrances.Add(startNodeDir);
+        }
+        if (endNode.worldTileEntrances.Contains(endNodeDir) == false)
+        {
+            endNode.worldTileEntrances.Add(endNodeDir);
+        }
+        
 
         path.Reverse();
         return path;

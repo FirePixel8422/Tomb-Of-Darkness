@@ -11,6 +11,7 @@ public class Node : IHeapItems<Node>
     public Vector3 worldPos;
 
     public WorldTile worldTile;
+    public bool placedInWorld;
 
     public bool walkable;
 

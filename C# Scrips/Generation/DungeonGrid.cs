@@ -240,7 +240,22 @@ public class DungeonGrid : MonoBehaviour
     public void SpawnCubes()
     {
         buildings = FindObjectsOfType<Building>();
+        List<List<Node>> fullList = new List<List<Node>>();
+
         for (int i = 0; i < buildings.Length; i++)
+        {
+            for (int i2 = 0; i2 < buildings[i].paths.Count; i2++)
+            {
+                if (buildings[i].paths[i2] == null)
+                {
+                    continue;
+                }
+                fullList.Add(buildings[i].paths[i2]);
+            }
+        }
+        DungeonTileSpawner.Instance.SpawnTiles(fullList);
+
+        /*for (int i = 0; i < buildings.Length; i++)
         {
             for (int i2 = 0; i2 < buildings[i].paths.Count; i2++)
             {
@@ -283,7 +298,7 @@ public class DungeonGrid : MonoBehaviour
                                 {
                                     worldTile.GetComponent<Renderer>().material.color = Color.black;
 
-                                    int3 clampedStairDir = -INT3.Clamp(node.stairDirList[i4], -1, 1);
+                                    int3 clampedStairDir = -INT_Logic.Clamp(node.stairDirList[i4], -1, 1);
                                     int3[] disableNodeDirections = new int3[]
                                     {
                                         new int3(clampedStairDir.x, 0, clampedStairDir.z),
@@ -312,7 +327,7 @@ public class DungeonGrid : MonoBehaviour
                     }
                 }
             }
-        }
+        }//*/
     }
 
 

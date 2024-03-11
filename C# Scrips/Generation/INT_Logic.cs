@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public static class INT3
+public static class INT_Logic
 {
     public static int3 Difference(int3 a, int3 b)
     {
@@ -23,9 +23,23 @@ public static class INT3
 
         return output;
     }
+    public static int3 Abs(int3 a)
+    {
+        a.x = Mathf.Abs(a.x);
+        a.y = Mathf.Abs(a.y);
+        a.z = Mathf.Abs(a.z);
+
+        return a;
+    }
     public static int3 Clamp(int3 a, int min, int max)
     {
         int3 outPut = new int3(Mathf.Clamp(a.x, min, max), Mathf.Clamp(a.y, min, max), Mathf.Clamp(a.z, min, max));
+
+        return outPut;
+    }
+    public static int2 Clamp(int2 a, int min, int max)
+    {
+        int2 outPut = new int2(Mathf.Clamp(a.x, min, max), Mathf.Clamp(a.y, min, max));
 
         return outPut;
     }

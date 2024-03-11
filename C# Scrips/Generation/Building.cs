@@ -6,6 +6,7 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
     public List<Transform> entrances;
+    public List<int2> entranceDirs;
 
     public List<Building> connectedBuildings;
     public List<int> buildingsCreated;
@@ -63,6 +64,23 @@ public class Building : MonoBehaviour
         buildingsCreated = new List<int>(maxConnections);
         paths = new List<List<Node>>(maxConnections);
 
+        entranceDirs = new List<int2>(entrances.Count);
+        for (int i = 0; i < entrances.Count; i++)
+        {
+            Vector3 diff = transform.position - entrances[i].position;
+            if(Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
+            {
+                diff.z = 0;
+                diff.x = Mathf.Clamp(diff.x, -1, 1);
+            }
+            else
+            {
+                diff.x = 0;
+                diff.z = Mathf.Clamp(diff.z, -1, 1);
+            }
+            entranceDirs.Add(-new int2(Mathf.RoundToInt(diff.x), Mathf.RoundToInt(diff.z)));
+        }
+
         gridPos = DungeonGrid.Instance.NodeFromWorldPoint(transform.position).gridPos;
 
         float tileSize = DungeonGrid.Instance.tileSize;
@@ -71,11 +89,11 @@ public class Building : MonoBehaviour
             - Vector3.right * transform.localScale.x / tileSize / 2
             - Vector3.forward * transform.localScale.z / tileSize / 2;
 
-        for (int x = 0; x < transform.localScale.x / tileSize; x++)
+        for (int x = 0; x < Mathf.RoundToInt(transform.localScale.x / tileSize); x++)
         {
-            for (int y = 0; y < transform.localScale.y / tileSize; y++)
+            for (int y = 0; y < Mathf.RoundToInt(transform.localScale.y / tileSize); y++)
             {
-                for (int z = 0; z < transform.localScale.z / tileSize; z++)
+                for (int z = 0; z < Mathf.RoundToInt(transform.localScale.z / tileSize); z++)
                 {
                     Node node = DungeonGrid.Instance.NodeFromWorldPoint(bottomLeft
                         + Vector3.right * (x * tileSize - tileSize / 2) + Vector3.forward * (z * tileSize - tileSize / 2));
@@ -83,10 +101,11 @@ public class Building : MonoBehaviour
 
                     if (special)
                     {
-                        Node noder = DungeonGrid.Instance.NodeFromWorldPoint(bottomLeft
-                        + new Vector3(x * tileSize - tileSize / 2, 0, z * tileSize - tileSize / 2));
-                        print(noder.worldPos);
-                        Instantiate(cube, node.worldPos, Quaternion.identity);
+                        DungeonGrid.Instance.NodeFromWorldPoint(bottomLeft
+                        + Vector3.right * (x * tileSize - tileSize / 2) + Vector3.forward * (z * tileSize - tileSize / 2));
+
+                        GameObject cubeObj = Instantiate(cube, node.worldPos, Quaternion.identity);
+                        cubeObj.GetComponent<Renderer>().material.color = Color.blue;
                     }
                 }
             }
@@ -108,10 +127,12 @@ public class Building : MonoBehaviour
             {
                 continue;
             }
-            Transform closestEntranceThisBuilding = GetClosestEntrance(connectedBuildings[i].transform);
+            Transform closestEntranceThisBuilding = GetClosestEntrance(connectedBuildings[i].transform, out int index);
 
             paths.Add(PathFinding.Instance.FindPath(closestEntranceThisBuilding.position,
-                connectedBuildings[i].GetClosestEntrance(closestEntranceThisBuilding).position,
+                connectedBuildings[i].GetClosestEntrance(closestEntranceThisBuilding, out int index2).position,
+                entranceDirs[index],
+                connectedBuildings[i].entranceDirs[index2],
                 out int tempInt));
             buildingsCreated[i] = tempInt;
         }
@@ -127,8 +148,8 @@ public class Building : MonoBehaviour
 
         for (int i = 0; i < _buildings.Count; i++)
         {
-            Transform closestEntrance = _buildings[i].GetClosestEntrance(transform);
-            int layerDiff = INT3.Difference(_buildings[i].gridPos, gridPos).y;
+            Transform closestEntrance = _buildings[i].GetClosestEntrance(transform, out int index);
+            int layerDiff = Mathf.Abs(INT_Logic.Difference(_buildings[i].gridPos, gridPos).y);
 
             if (forceStairs && layerDiff == 0)
             {
@@ -169,7 +190,7 @@ public class Building : MonoBehaviour
     }
 
 
-    public Transform GetClosestEntrance(Transform targetBuilding)
+    public Transform GetClosestEntrance(Transform targetBuilding, out int id)
     {
         float dist = int.MaxValue;
         int index = 0;
@@ -182,7 +203,7 @@ public class Building : MonoBehaviour
                 index = i;
             }
         }
-
+        id = index;
         return entrances[index];
     }
 }
