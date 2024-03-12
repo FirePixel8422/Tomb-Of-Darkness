@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
         Instance = this; 
     }
 
+    public ThirdPersonCamera thirdPersonCam;
 
 
     private Rigidbody rb;
@@ -21,6 +22,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        thirdPersonCam = GetComponent<ThirdPersonCamera>();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -34,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector3(moveDir.x * moveSpeed, rb.velocity.y, moveDir.z * moveSpeed);
+        rb.velocity = thirdPersonCam.camRotPointY.TransformDirection(new Vector3(moveDir.x * moveSpeed, rb.velocity.y, moveDir.z * moveSpeed));
     }
 
 }

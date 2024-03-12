@@ -59,7 +59,7 @@ public class DungeonTileSpawner : MonoBehaviour
                         new int2(-3, 0),
                         new int2(0, 3),
                         new int2(0, -3),
-                    }; 
+                    };
                     int[] stairRotation = new int[]
                     {
                         -90,
@@ -182,7 +182,8 @@ public class DungeonTileSpawner : MonoBehaviour
                 }
                 else
                 {
-                    spawnedObj.transform.GetChild(0).rotation = Quaternion.Euler(0, -rot.y, 0);
+                    Quaternion floorRot = Quaternion.Euler(0, Mathf.RoundToInt(-rot.y / 90) * 90, 0);
+                    spawnedObj.transform.GetChild(0).rotation = floorRot;
                 }
             }
         }
