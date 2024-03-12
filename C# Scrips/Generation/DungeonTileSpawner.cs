@@ -14,11 +14,15 @@ public class DungeonTileSpawner : MonoBehaviour
         Instance = this;
     }
 
+    public float spikeChance;
+
     public GameObject hallway;
     public GameObject corner;
     public GameObject tSplit;
     public GameObject xSplit;
     public GameObject stair;
+    public GameObject spikes;
+    public GameObject door;
 
 
     public void SpawnTiles(List<List<Node>> tiles)
@@ -171,8 +175,15 @@ public class DungeonTileSpawner : MonoBehaviour
                     spawnedObj = Instantiate(xSplit, worldPos, Quaternion.identity);
                 }
 
-                spawnedObj.transform.GetChild(0).rotation = Quaternion.Euler(0, -rot.y, 0);
-
+                if (UnityEngine.Random.Range(0, 100f) > (100 - spikeChance))
+                {
+                    Destroy(spawnedObj.transform.GetChild(0).gameObject);
+                    Instantiate(spikes, worldPos, Quaternion.identity);
+                }
+                else
+                {
+                    spawnedObj.transform.GetChild(0).rotation = Quaternion.Euler(0, -rot.y, 0);
+                }
             }
         }
     }
