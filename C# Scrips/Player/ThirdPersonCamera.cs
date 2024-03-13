@@ -2,9 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 public class ThirdPersonCamera : MonoBehaviour
 {
+    public static ThirdPersonCamera Instance;
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+
+    public CinemachineTargetGroup camTargetGroup;
+    public bool updateCam = true;
+
     public float xSens, ySens;
 
     public Transform camRotPointY;
@@ -20,8 +31,19 @@ public class ThirdPersonCamera : MonoBehaviour
         input = new Vector2(vec.x * xSens, -vec.y * ySens);
     }
 
+    public void ChangeCamUpdateMode(bool state)
+    {
+        updateCam = state;
+        camTargetGroup.m_Targets[0].weight = state == false ? 0 : 1;
+    }
+
     private void Update()
     {
+        if(updateCam == false)
+        {
+            return;
+        }
+
         Vector3 camRot = camRotPointY.localEulerAngles + camRotPointX.localEulerAngles;
         camRot.x += input.y;
         camRot.y += input.x;

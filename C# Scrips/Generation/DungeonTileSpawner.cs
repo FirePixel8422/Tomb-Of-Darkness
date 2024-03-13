@@ -14,6 +14,7 @@ public class DungeonTileSpawner : MonoBehaviour
         Instance = this;
     }
 
+    [Range(0,100)]
     public float spikeChance;
 
     public GameObject hallway;
@@ -175,7 +176,9 @@ public class DungeonTileSpawner : MonoBehaviour
                     spawnedObj = Instantiate(xSplit, worldPos, Quaternion.identity);
                 }
 
-                if (UnityEngine.Random.Range(0, 100f) > (100 - spikeChance))
+                int3 downNodeGridPos = node.gridPos + new int3(0, -1, 0);
+                if (UnityEngine.Random.Range(0, 100f) > (100 - spikeChance) &&
+                    DungeonGrid.Instance.IsInsideGrid(downNodeGridPos) && DungeonGrid.Instance.GetNodeFromGridPos(downNodeGridPos).isOpen == false)
                 {
                     Destroy(spawnedObj.transform.GetChild(0).gameObject);
                     Instantiate(spikes, worldPos, Quaternion.identity);
