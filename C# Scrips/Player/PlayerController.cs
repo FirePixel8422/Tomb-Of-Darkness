@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 
     public ThirdPersonCamera thirdPersonCam;
     public Transform deathTransform;
+    public float deathRotSpeed;
 
     public bool canMove;
 
@@ -44,14 +45,24 @@ public class PlayerController : MonoBehaviour
             canMove = false;
             rb.velocity = new Vector3(rb.velocity.x / 1.5f, -1.5f, rb.velocity.z / 1.5f);
             rb.constraints = RigidbodyConstraints.None;
-            deathTransform.position = transform.position;
+            deathTransform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            deathTransform.rotation = thirdPersonCam.camRotPointY.localRotation;
             thirdPersonCam.camTargetGroup.m_Targets[0].target = deathTransform;
-            //thirdPersonCam.c
         }
         else
         {
             canMove = true;
             rb.constraints = RigidbodyConstraints.FreezeRotation;
+        }
+    }
+
+    private void Update()
+    {
+        if (!canMove)
+        {
+            deathTransform.localEulerAngles = new Vector3(Mathf.MoveTowards(deathTransform.localEulerAngles.x, 90, deathRotSpeed * Time.deltaTime),
+                deathTransform.localEulerAngles.y,
+                Mathf.MoveTowards(deathTransform.localEulerAngles.z, 0, deathRotSpeed * Time.deltaTime));
         }
     }
 

@@ -14,7 +14,8 @@ public class ThirdPersonCamera : MonoBehaviour
 
 
     public CinemachineTargetGroup camTargetGroup;
-    public bool updateCam = true;
+    public CinemachineVirtualCamera cam;
+    public bool camInput = true;
 
     public float xSens, ySens;
 
@@ -33,13 +34,12 @@ public class ThirdPersonCamera : MonoBehaviour
 
     public void ChangeCamUpdateMode(bool state)
     {
-        updateCam = state;
-        camTargetGroup.m_Targets[0].weight = state == false ? 0 : 1;
+        camInput = state;
     }
 
     private void Update()
     {
-        if(updateCam == false)
+        if(camInput == false)
         {
             return;
         }

@@ -9,6 +9,8 @@ public class SpikeTrap : MonoBehaviour
     public Rigidbody trapPlane;
     public bool trapPlaneTriggerd;
 
+    public GameObject wallColliders;
+
     public BoxCollider trigger;
 
 
@@ -17,6 +19,7 @@ public class SpikeTrap : MonoBehaviour
         ThirdPersonCamera.Instance.ChangeCamUpdateMode(false);
         PlayerController.Instance.Falling(true);
         trapPlaneTriggerd = true;
+        wallColliders.SetActive(true);
     }
 
     private void FixedUpdate()

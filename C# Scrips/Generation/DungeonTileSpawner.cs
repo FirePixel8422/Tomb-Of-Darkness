@@ -76,6 +76,13 @@ public class DungeonTileSpawner : MonoBehaviour
                             rot = Quaternion.Euler(0, stairRotation[i3], 0);
 
                             spawnedObj = Instantiate(stair, worldPos + new Vector3(stairDir.x, 0, stairDir.y) * DungeonGrid.Instance.tileSize, rot);
+
+                            if (node.stairDir.y == -1)
+                            {
+                                spawnedObj.transform.rotation *= Quaternion.Euler(0, 180, 0);
+                                spawnedObj.transform.position += spawnedObj.transform.forward * DungeonGrid.Instance.tileSize;
+                                spawnedObj.transform.transform.position += Vector3.up * DungeonGrid.Instance.tileSize;
+                            }
                             break;
                         }
                     }
