@@ -2489,6 +2489,33 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f88a2920d29bf3c42bd23974d11cdb64, type: 3}
+--- !u!1 &1584668246 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2154264985438338349, guid: 724d3f29400fef149821ee24f3bc6a77,
+    type: 3}
+  m_PrefabInstance: {fileID: 3362064194739769039}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1584668248
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1584668246}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f9a0af8ef91c9d8489ab913047f10a2f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &1606430551 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9128247445910843245, guid: f88a2920d29bf3c42bd23974d11cdb64,
@@ -2545,6 +2572,7 @@ MonoBehaviour:
   deathTextObj: {fileID: 646814184}
   showTextDelay: 1.5
   textShowUpTime: 2
+  anim: {fileID: 0}
   finalDeathTransformPos: {x: 0, y: 0, z: 0}
   smoothSpeed: 0.5
 --- !u!4 &1662665960
@@ -3049,10 +3077,34 @@ PrefabInstance:
       propertyPath: m_CollisionDetection
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6120896014443161296, guid: 724d3f29400fef149821ee24f3bc6a77,
+        type: 3}
+      propertyPath: moveCap.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6120896014443161296, guid: 724d3f29400fef149821ee24f3bc6a77,
+        type: 3}
+      propertyPath: moveCap.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6120896014443161296, guid: 724d3f29400fef149821ee24f3bc6a77,
+        type: 3}
+      propertyPath: moveCap.z
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6120896014443161296, guid: 724d3f29400fef149821ee24f3bc6a77,
+        type: 3}
+      propertyPath: accelSpeed
+      value: 35
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2154264985438338349, guid: 724d3f29400fef149821ee24f3bc6a77,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1584668248}
   m_SourcePrefab: {fileID: 100100000, guid: 724d3f29400fef149821ee24f3bc6a77, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

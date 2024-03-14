@@ -31,6 +31,8 @@ public class PlayerDeathManager : MonoBehaviour
     public float showTextDelay;
     public float textShowUpTime;
 
+    public Animator anim;
+
     public Vector3 finalDeathTransformPos;
     public float smoothSpeed;
 
@@ -40,11 +42,13 @@ public class PlayerDeathManager : MonoBehaviour
         thirdPersonCam = ThirdPersonCamera.Instance;
         playerController = PlayerController.Instance;
         rb = playerController.GetComponent<Rigidbody>();
+        anim = thirdPersonCam.GetComponentInParent<Animator>();
     }
 
     public void KillBySpikes(Vector3 spikePos)
     {
         playerController.canMove = false;
+        anim.SetBool("disableCam", true);
 
         rb.velocity = new Vector3(rb.velocity.x / 1.5f, -1.5f, rb.velocity.z / 1.5f);
         rb.constraints = RigidbodyConstraints.None;
@@ -52,7 +56,7 @@ public class PlayerDeathManager : MonoBehaviour
         deathTransform.SetPositionAndRotation(playerController.transform.position,
             thirdPersonCam.camRotPointX.localRotation);
 
-        finalDeathTransformPos = spikePos;
+        finalDeathTransformPos = spikePos + Vector3.up / 3;
 
         thirdPersonCam.camTargetGroup.m_Targets[0].target = deathTransform;
 

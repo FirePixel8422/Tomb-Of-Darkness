@@ -21,7 +21,8 @@ public class PlayerController : MonoBehaviour
     public bool canMove;
 
     public Vector3 moveDir;
-    public float moveSpeed;
+    public float accelSpeed;
+    public Vector3 moveCap;
 
 
     private void Start()
@@ -40,12 +41,17 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private void FixedUpdate()
+    private void Update()
     {
-        if(canMove == false)
+        if (canMove == false)
         {
             return;
         }
-        rb.velocity = thirdPersonCam.camRotPointY.TransformDirection(new Vector3(moveDir.x * moveSpeed, rb.velocity.y, moveDir.z * moveSpeed));
+        rb.velocity += (thirdPersonCam.camRotPointY.TransformDirection(
+            new Vector3(moveDir.x * accelSpeed, 0, moveDir.z * accelSpeed) * Time.deltaTime));
+
+        print(thirdPersonCam.camRotPointY.TransformDirection(
+            new Vector3(moveDir.x * accelSpeed, 0, moveDir.z * accelSpeed) * Time.deltaTime));
+        rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -moveCap.x, moveCap.x), rb.velocity.y, Mathf.Clamp(rb.velocity.z, -moveCap.z, moveCap.z));
     }
 }
