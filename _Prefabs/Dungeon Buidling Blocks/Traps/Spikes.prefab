@@ -196,6 +196,7 @@ GameObject:
   - component: {fileID: 5533272442817605924}
   - component: {fileID: 8244722409162478888}
   - component: {fileID: 9053765769885742745}
+  - component: {fileID: 8079574338463884053}
   - component: {fileID: 5131046797892527584}
   m_Layer: 6
   m_Name: Spikes
@@ -314,8 +315,29 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.9, y: 0.8000001, z: 0.9}
-  m_Center: {x: 0, y: 0.57, z: 0}
+  m_Size: {x: 0.95, y: 0.024437904, z: 0.95}
+  m_Center: {x: 0, y: 0.05997324, z: 0}
+--- !u!65 &8079574338463884053
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3385767193452019860}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.45, y: 0.024437904, z: 0.45}
+  m_Center: {x: 0, y: 0.175, z: 0}
 --- !u!114 &5131046797892527584
 MonoBehaviour:
   m_ObjectHideFlags: 0

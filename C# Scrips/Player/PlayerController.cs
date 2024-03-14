@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,6 +24,10 @@ public class PlayerController : MonoBehaviour
     public Vector3 moveDir;
     public float moveSpeed;
 
+    public float jumpForce;
+    public Transform groundCheck;
+    public LayerMask groundLayer;
+
 
     private void Start()
     {
@@ -37,6 +42,13 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext ctx)
     {
         moveDir = ctx.ReadValue<Vector3>();
+    }
+    public void OnJump(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed && Physics.OverlapSphere(groundCheck.position, .1f, groundLayer).Length != 0 && canMove)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
     }
 
 

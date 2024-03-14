@@ -13,12 +13,13 @@ public class LootItemSO : ScriptableObject
 }
 
 [System.Serializable]
-public class Weapon
+public struct Weapon
 {
     public int t;
 }
 [System.Serializable]
-public class Armor
+public struct Armor
 {
-    public int t;
+    public float damageReduction;
+    public float speedModifier;
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7792661370012501514}
   - component: {fileID: 4845738945514738095}
   m_Layer: 0
-  m_Name: can follow transform
+  m_Name: cam follow transform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 106275900269864922}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.21, y: 3.687, z: -3.2900002}
+  m_LocalPosition: {x: 0.21, y: 3.687, z: -3.194}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -322,6 +322,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 158e7049-437a-47e0-b235-6be2a3362243
     m_ActionName: Gameplay/Sprint[/Keyboard/shift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6120896014443161296}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ffc5b500-8a44-48ea-adc4-ab8a78641ba6
+    m_ActionName: Gameplay/Jump[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -344,9 +360,12 @@ MonoBehaviour:
   rotPoint: {fileID: 4112773262849329600}
   rotSpeed: 12
   moveDir: {x: 0, y: 0, z: 0}
-  moveSpeed: 2
-  moveCap: {x: 5, y: 5, z: 5}
-  minDist: 0.1
+  moveSpeed: 2.25
+  jumpForce: 5
+  groundCheck: {fileID: 4642216413691602889}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 192
 --- !u!114 &228973519627848501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,7 +379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pController: {fileID: 0}
-  sprintMultiplier: 1.65
+  sprintMultiplier: 1.85
   isSprinting: 0
   sprintHeld: 0
   totalSprintTime: 3
@@ -388,6 +407,37 @@ MonoBehaviour:
   camRotPointX: {fileID: 5569421620435699230}
   clampHorizontal: 90
   input: {x: 0, y: 0}
+--- !u!1 &5487844388395992911
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4642216413691602889}
+  m_Layer: 0
+  m_Name: groundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4642216413691602889
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5487844388395992911}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.6899998, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8333554679710279245}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5558855776683100497
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,11 +463,12 @@ Transform:
   m_GameObject: {fileID: 5558855776683100497}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.69, z: -0.5}
+  m_LocalPosition: {x: 0, y: 0.69, z: -0.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5569421620435699230}
+  - {fileID: 4642216413691602889}
   m_Father: {fileID: 1597710746824597487}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5733500727959226380
@@ -530,7 +581,7 @@ Transform:
   m_GameObject: {fileID: 5784693629024012604}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.21, y: 3.687, z: -5.29}
+  m_LocalPosition: {x: 0.21, y: 3.687, z: -5.1940002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -555,10 +606,10 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
+  m_LookAt: {fileID: 4642216413691602889}
   m_Follow: {fileID: 7792661370012501514}
   m_Lens:
-    FieldOfView: 32
+    FieldOfView: 45
     OrthographicSize: 10
     NearClipPlane: 0.01
     FarClipPlane: 5000
@@ -595,13 +646,13 @@ MonoBehaviour:
   m_TransparentLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_MinimumDistanceFromTarget: 0.1
+  m_MinimumDistanceFromTarget: 0.01
   m_AvoidObstacles: 1
   m_DistanceLimit: 0
   m_MinimumOcclusionTime: 0
-  m_CameraRadius: 0.1
+  m_CameraRadius: 0.05
   m_Strategy: 0
-  m_MaximumEffort: 4
+  m_MaximumEffort: 10
   m_SmoothingTime: 0
   m_Damping: 0
   m_DampingWhenOccluded: 0
