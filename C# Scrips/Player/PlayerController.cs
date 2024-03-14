@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,9 +17,11 @@ public class PlayerController : MonoBehaviour
 
     public bool canMove;
 
+    public Transform rotPoint;
+    public float rotSpeed;
+
     public Vector3 moveDir;
-    public float accelSpeed;
-    public Vector3 moveCap;
+    public float moveSpeed;
 
 
     private void Start()
@@ -47,11 +46,20 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        rb.velocity += (thirdPersonCam.camRotPointY.TransformDirection(
-            new Vector3(moveDir.x * accelSpeed, 0, moveDir.z * accelSpeed) * Time.deltaTime));
+        if (moveDir == Vector3.zero)
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            return;
+        }
 
-        print(thirdPersonCam.camRotPointY.TransformDirection(
-            new Vector3(moveDir.x * accelSpeed, 0, moveDir.z * accelSpeed) * Time.deltaTime));
-        rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -moveCap.x, moveCap.x), rb.velocity.y, Mathf.Clamp(rb.velocity.z, -moveCap.z, moveCap.z));
+        Quaternion rot = Quaternion.LookRotation(thirdPersonCam.camRotPointY.TransformDirection(moveDir));
+
+        rotPoint.rotation = Quaternion.Lerp(rotPoint.rotation, rot, rotSpeed * Time.deltaTime);
+
+        Vector3 forwardMoveDir = thirdPersonCam.camRotPointY.TransformDirection(
+            new Vector3(moveDir.x, 0, moveDir.z));
+
+
+        rb.velocity = new Vector3(forwardMoveDir.x * moveSpeed, rb.velocity.y, forwardMoveDir.z * moveSpeed);
     }
 }

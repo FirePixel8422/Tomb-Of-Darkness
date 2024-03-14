@@ -54,7 +54,7 @@ public class PlayerDeathManager : MonoBehaviour
         rb.constraints = RigidbodyConstraints.None;
 
         deathTransform.SetPositionAndRotation(playerController.transform.position,
-            thirdPersonCam.camRotPointX.localRotation);
+            thirdPersonCam.camRotPointX.rotation);
 
         finalDeathTransformPos = spikePos + Vector3.up / 3;
 
