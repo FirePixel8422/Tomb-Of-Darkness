@@ -17,9 +17,16 @@ public class SpikeTrap : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
         ThirdPersonCamera.Instance.ChangeCamUpdateMode(false);
-        PlayerController.Instance.Falling(true);
+        PlayerDeathManager.Instance.KillBySpikes(transform.position);
         trapPlaneTriggerd = true;
         wallColliders.SetActive(true);
+    }
+
+    public IEnumerator ResetTrap()
+    {
+        yield return new WaitForSeconds(1);
+        wallColliders.SetActive(false);
+        trapPlaneTriggerd = false;
     }
 
     private void FixedUpdate()

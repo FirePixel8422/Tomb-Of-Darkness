@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7792661370012501514}
   - component: {fileID: 4845738945514738095}
   m_Layer: 0
-  m_Name: Target Group
+  m_Name: can follow transform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1096f7d022ead0d4bad9cc5940734f70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thirdPersonCam: {fileID: 0}
+  rb: {fileID: 0}
   canMove: 1
   moveDir: {x: 0, y: 0, z: 0}
   moveSpeed: 8
@@ -317,7 +317,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camTargetGroup: {fileID: 4845738945514738095}
-  updateCam: 1
+  cam: {fileID: 0}
+  camInput: 1
   xSens: 0.275
   ySens: 0.4
   camRotPointY: {fileID: 8333554679710279245}
@@ -491,7 +492,7 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
+  m_LookAt: {fileID: 1597710746824597487}
   m_Follow: {fileID: 7792661370012501514}
   m_Lens:
     FieldOfView: 32

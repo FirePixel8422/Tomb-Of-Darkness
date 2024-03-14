@@ -39,7 +39,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     private void Update()
     {
-        if(camInput == false)
+        if (camInput == false)
         {
             return;
         }

@@ -190,11 +190,8 @@ public class DungeonTileSpawner : MonoBehaviour
                     Destroy(spawnedObj.transform.GetChild(0).gameObject);
                     Instantiate(spikes, worldPos, Quaternion.identity);
                 }
-                else
-                {
-                    Quaternion floorRot = Quaternion.Euler(0, Mathf.RoundToInt(-rot.y / 90) * 90, 0);
-                    spawnedObj.transform.GetChild(0).rotation = floorRot;
-                }
+                Quaternion floorRot = Quaternion.Euler(0, Mathf.RoundToInt(-rot.y / 90) * 90, 0);
+                spawnedObj.transform.GetChild(0).rotation = floorRot;
             }
         }
     }
