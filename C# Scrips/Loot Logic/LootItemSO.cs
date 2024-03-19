@@ -9,13 +9,15 @@ public class LootItemSO : ScriptableObject
     public string itemName;
 
     public Weapon weapon;
-    public Weapon armor;
+    public Armor armor;
 }
 
 [System.Serializable]
 public struct Weapon
 {
-    public int t;
+    public float damage;
+    public float attackSpeed;
+    public float reach;
 }
 [System.Serializable]
 public struct Armor
