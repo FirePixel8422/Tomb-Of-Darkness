@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Slot : MonoBehaviour, IPointerClickHandler
+public class Slot : MonoBehaviour
 {
     public Inventory inventory;
 
@@ -28,24 +28,8 @@ public class Slot : MonoBehaviour, IPointerClickHandler
             timer -= Time.deltaTime;
         }
     }
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (eventData.button == PointerEventData.InputButton.Left)
-        {
-            OnLeftClick();
-        }
-        else if (eventData.button == PointerEventData.InputButton.Right)
-        {
-            OnRightClick();
-        }
-    }
-
-
-
     public void OnLeftClick()
     {
-        GetComponent<Image>().color = Color.white;
-
         if (full && inventory.itemHeld == false)
         {
             //als dit slot wat heeft en de cursor niet
@@ -56,7 +40,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler
             inventory.itemHeld = true;
             full = false;
             heldItem.transform.SetParent(transform.root, true);
-            inventory.heldItem = heldItem;
+            inventory.HeldItem = heldItem;
             heldItem = null;
         }
         else if (inventory.itemHeld == true)
@@ -65,17 +49,18 @@ public class Slot : MonoBehaviour, IPointerClickHandler
             if (full)
             {
                 //als dit slot iets vasthoud
-                if (heldItem.itemId == inventory.heldItem.itemId && heldItem.amount != heldItem.stackSize)
+                if (heldItem.itemId == inventory.HeldItem.itemId && heldItem.amount != heldItem.stackSize && inventory.HeldItem.amount != heldItem.stackSize)
                 {
                     //als het item in dit slot hetzelfde soort item is wat de player met de cursor vastheeft en het slotItem niet al vol zit (stackSize)
-                    if (heldItem.amount + inventory.heldItem.amount > heldItem.stackSize)
+                    if ((heldItem.amount + inventory.HeldItem.amount) > heldItem.stackSize)
                     {
-                        inventory.heldItem.UpdateAmountText(heldItem.stackSize - heldItem.amount);
+                        inventory.HeldItem.UpdateAmountText(heldItem.stackSize - heldItem.amount);
                         heldItem.UpdateAmountText(heldItem.stackSize);
+                        return;
                     }
                     else
                     {
-                        inventory.heldItem.UpdateAmountText(inventory.heldItem.amount + heldItem.amount);
+                        inventory.HeldItem.UpdateAmountText(inventory.HeldItem.amount + heldItem.amount);
                         Destroy(heldItem.gameObject);
                     }
                 }
@@ -83,17 +68,16 @@ public class Slot : MonoBehaviour, IPointerClickHandler
                 {
                     Item temp = heldItem;
 
-                    heldItem = inventory.heldItem;
+                    heldItem = inventory.HeldItem;
                     heldItem.transform.SetParent(itemHolder, false, false);
 
-                    inventory.heldItem = temp;
-                    inventory.heldItem.transform.SetParent(transform.root);
+                    inventory.HeldItem = temp;
                     return;
                 }
             }
             inventory.itemHeld = false;
             full = true;
-            heldItem = inventory.heldItem;
+            heldItem = inventory.HeldItem;
             heldItem.transform.SetParent(itemHolder, false, false);
 
             if (heldItem.amount != heldItem.stackSize && timer > 0)
@@ -104,7 +88,6 @@ public class Slot : MonoBehaviour, IPointerClickHandler
     }
     public void OnRightClick()
     {
-        GetComponent<Image>().color = Color.black;
         if (full)
         {
             //dit slot heeft iets vast
@@ -116,11 +99,11 @@ public class Slot : MonoBehaviour, IPointerClickHandler
                     //slot heeft 1 van een item vast
                     // -pak item met cursor
 
-                    inventory.itemHeld = true;
                     full = false;
                     heldItem.transform.SetParent(transform.root, true);
-                    inventory.heldItem = heldItem;
                     heldItem = null;
+                    inventory.HeldItem = heldItem;
+                    inventory.itemHeld = true;
                 }
                 else
                 {
@@ -130,26 +113,26 @@ public class Slot : MonoBehaviour, IPointerClickHandler
                     int amount = heldItem.amount / 2;
                     heldItem.UpdateAmountText(heldItem.amount - amount);
 
-                    Item copiedItem = Instantiate(heldItem.gameObject, transform.root).GetComponent<Item>();
+                    Item copiedItem = Instantiate(heldItem.gameObject).GetComponent<Item>();
                     copiedItem.UpdateAmountText(amount);
 
                     inventory.itemHeld = true;
-                    inventory.heldItem = copiedItem;
+                    inventory.HeldItem = copiedItem;
                 }
             }
-            else if (heldItem.itemId == inventory.heldItem.itemId && heldItem.stackSize != heldItem.amount)
+            else if (heldItem.itemId == inventory.HeldItem.itemId && heldItem.stackSize != heldItem.amount)
             {
                 //player heeft wel wat vast met cursor
                 //en dat vastgehouden item is hetzelfde als het item in dit slot
                 // -plaats 1 van item in slot
 
                 heldItem.UpdateAmountText(heldItem.amount + 1);
-                inventory.heldItem.UpdateAmountText(inventory.heldItem.amount - 1);
+                inventory.HeldItem.UpdateAmountText(inventory.HeldItem.amount - 1);
 
-                if (inventory.heldItem.amount == 0)
+                if (inventory.HeldItem.amount == 0)
                 {
                     // -vernietig item sprite als laatste kopie geplaatst is in slot
-                    Destroy(inventory.heldItem.gameObject);
+                    Destroy(inventory.HeldItem.gameObject);
                     inventory.itemHeld = false;
                 }
             }
@@ -157,29 +140,28 @@ public class Slot : MonoBehaviour, IPointerClickHandler
         else if(inventory.itemHeld == true)
         {
             //dit slot heeft niks vast
-            if (inventory.heldItem.amount == 1)
+            if (inventory.HeldItem.amount == 1)
             {
                 //de player heeft 1 van een item vast met de cursor
                 // -plaats item in slot.
                 full = true;
                 inventory.itemHeld = false;
 
-                heldItem = inventory.heldItem;
-                heldItem.transform.SetParent(itemHolder, false);
-                heldItem.transform.localPosition = Vector3.zero;
+                heldItem = inventory.HeldItem;
+                heldItem.transform.SetParent(itemHolder, false, false);
             }
             else
             {
                 //de player heeft meer van 1 item vast met de cursor.
                 // -plaats 1 kopie van cursor item naar slot
 
-                Item copiedItem = Instantiate(inventory.heldItem.gameObject).GetComponent<Item>();
+                Item copiedItem = Instantiate(inventory.HeldItem.gameObject).GetComponent<Item>();
                 heldItem = copiedItem;
 
                 copiedItem.transform.SetParent(itemHolder, false, false);
                 copiedItem.UpdateAmountText(1);
 
-                inventory.heldItem.UpdateAmountText(inventory.heldItem.amount - 1);
+                inventory.HeldItem.UpdateAmountText(inventory.HeldItem.amount - 1);
                 full = true;
             }
         }
