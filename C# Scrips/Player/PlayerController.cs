@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public Rigidbody rb;
 
+    public Inventory inventory;
+
     public bool canMove;
 
     public Transform rotPoint;
@@ -33,9 +35,7 @@ public class PlayerController : MonoBehaviour
     {
         thirdPersonCam = GetComponent<ThirdPersonCamera>();
         rb = GetComponent<Rigidbody>();
-
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
 
@@ -48,6 +48,17 @@ public class PlayerController : MonoBehaviour
         if (ctx.performed && Physics.OverlapSphere(groundCheck.position, .1f, groundLayer).Length != 0 && canMove)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+    public void OnOpenCloseInventory(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            bool newInventoryState = !inventory.gameObject.activeInHierarchy;
+
+            inventory.gameObject.SetActive(newInventoryState);
+            Cursor.lockState = newInventoryState == true ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = newInventoryState;
         }
     }
 

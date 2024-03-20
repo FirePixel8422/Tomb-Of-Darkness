@@ -66,6 +66,7 @@ public class Slot : MonoBehaviour
                 }
                 else
                 {
+                    //item in slot is anders dan item op cursor
                     Item temp = heldItem;
 
                     heldItem = inventory.HeldItem;

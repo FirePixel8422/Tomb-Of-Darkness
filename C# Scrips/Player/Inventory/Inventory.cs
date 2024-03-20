@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -12,12 +10,14 @@ public class Inventory : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        gfxRayCaster = FindObjectOfType<GraphicRaycaster>();
     }
 
-
+    public GraphicRaycaster gfxRayCaster;
     public Slot[] slots;
 
     private Item heldItem;
+    public bool itemHeld;
     public Item HeldItem
     {
         get
@@ -27,37 +27,20 @@ public class Inventory : MonoBehaviour
         set
         {
             heldItem = value;
-            heldItem.transform.SetParent(transform, true, false);
+            heldItem.transform.SetParent(transform.parent, true, false);
             UpdateMoveItemToMouse();
         }
     }
-    public bool itemHeld;
     
-
-    private void Start()
+    public void OnLeftClick(InputAction.CallbackContext ctx)
     {
-        slots = GetComponentsInChildren<Slot>();
-
-        for (int i = 0; i < slots.Length; i++)
-        {
-            slots[i].slotId = i;
-        }
-    }
-
-    private void Update()
-    {
-        if (itemHeld)
-        {
-            UpdateMoveItemToMouse();
-        }
-
-        if (Input.GetMouseButtonDown(0))
+        if (gameObject.activeInHierarchy && ctx.performed)
         {
             PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
             pointerEventData.position = Input.mousePosition;
 
             var results = new List<RaycastResult>();
-            FindObjectOfType<GraphicRaycaster>().Raycast(pointerEventData, results);
+            gfxRayCaster.Raycast(pointerEventData, results);
 
             foreach (var result in results)
             {
@@ -68,13 +51,16 @@ public class Inventory : MonoBehaviour
                 }
             }
         }
-        else if (Input.GetMouseButtonDown(1))
+    }
+    public void OnRightClick(InputAction.CallbackContext ctx)
+    {
+        if (gameObject.activeInHierarchy && ctx.performed)
         {
             PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
             pointerEventData.position = Input.mousePosition;
 
             var results = new List<RaycastResult>();
-            FindObjectOfType<GraphicRaycaster>().Raycast(pointerEventData, results);
+            gfxRayCaster.Raycast(pointerEventData, results);
 
             foreach (var result in results)
             {
@@ -87,11 +73,27 @@ public class Inventory : MonoBehaviour
         }
     }
 
+
+    private void Start()
+    {
+        slots = GetComponentsInChildren<Slot>();
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            slots[i].slotId = i;
+        }
+    }
+    private void Update()
+    {
+        if (itemHeld)
+        {
+            UpdateMoveItemToMouse();
+        }
+    }
     public void UpdateMoveItemToMouse()
     {
-        HeldItem.transform.position = Input.mousePosition;
+        heldItem.transform.position = Input.mousePosition;
     }
-
     public void StackAllItemToMax(Item item)
     {
         int amount = item.amount;

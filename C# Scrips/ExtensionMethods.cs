@@ -12,7 +12,7 @@ public static class ExtensionMethods
             return;
         }
 
-        trans.SetParent(parent, true);
+        trans.SetParent(parent);
         if (!keepLocalPos)
         {
             trans.localPosition = Vector3.zero;
