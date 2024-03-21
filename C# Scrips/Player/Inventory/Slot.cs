@@ -54,13 +54,13 @@ public class Slot : MonoBehaviour
                     //als het item in dit slot hetzelfde soort item is wat de player met de cursor vastheeft en het slotItem niet al vol zit (stackSize)
                     if ((heldItem.amount + inventory.HeldItem.amount) > heldItem.stackSize)
                     {
-                        inventory.HeldItem.UpdateAmountText(heldItem.stackSize - heldItem.amount);
-                        heldItem.UpdateAmountText(heldItem.stackSize);
+                        inventory.HeldItem.UpdateAmount(heldItem.stackSize - heldItem.amount);
+                        heldItem.UpdateAmount(heldItem.stackSize);
                         return;
                     }
                     else
                     {
-                        inventory.HeldItem.UpdateAmountText(inventory.HeldItem.amount + heldItem.amount);
+                        inventory.HeldItem.UpdateAmount(inventory.HeldItem.amount + heldItem.amount);
                         Destroy(heldItem.gameObject);
                     }
                 }
@@ -112,10 +112,10 @@ public class Slot : MonoBehaviour
                     // -geef player cursor de helft (omlaag afgerond) van het item (via een kopie)
 
                     int amount = heldItem.amount / 2;
-                    heldItem.UpdateAmountText(heldItem.amount - amount);
+                    heldItem.UpdateAmount(heldItem.amount - amount);
 
                     Item copiedItem = Instantiate(heldItem.gameObject).GetComponent<Item>();
-                    copiedItem.UpdateAmountText(amount);
+                    copiedItem.UpdateAmount(amount);
 
                     inventory.itemHeld = true;
                     inventory.HeldItem = copiedItem;
@@ -127,8 +127,8 @@ public class Slot : MonoBehaviour
                 //en dat vastgehouden item is hetzelfde als het item in dit slot
                 // -plaats 1 van item in slot
 
-                heldItem.UpdateAmountText(heldItem.amount + 1);
-                inventory.HeldItem.UpdateAmountText(inventory.HeldItem.amount - 1);
+                heldItem.UpdateAmount(heldItem.amount + 1);
+                inventory.HeldItem.UpdateAmount(inventory.HeldItem.amount - 1);
 
                 if (inventory.HeldItem.amount == 0)
                 {
@@ -160,9 +160,9 @@ public class Slot : MonoBehaviour
                 heldItem = copiedItem;
 
                 copiedItem.transform.SetParent(itemHolder, false, false);
-                copiedItem.UpdateAmountText(1);
+                copiedItem.UpdateAmount(1);
 
-                inventory.HeldItem.UpdateAmountText(inventory.HeldItem.amount - 1);
+                inventory.HeldItem.UpdateAmount(inventory.HeldItem.amount - 1);
                 full = true;
             }
         }

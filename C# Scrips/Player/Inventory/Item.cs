@@ -11,13 +11,13 @@ public class Item : MonoBehaviour
     public TextMeshProUGUI amountText;
 
 
-    private void Start()
+    private void Awake()
     {
-        amountText = GetComponentInChildren<TextMeshProUGUI>();
+        amountText = GetComponentInChildren<TextMeshProUGUI>(true);
     }
 
 
-    public void UpdateAmountText(int newAmount)
+    public void UpdateAmount(int newAmount)
     {
         amount = newAmount;
 

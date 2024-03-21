@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1577227729921638092}
   - component: {fileID: -2507350327224392339}
   m_Layer: 2
-  m_Name: Item
+  m_Name: DefaultItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemId: 0
-  stackSize: 0
+  stackSize: 4
   amount: 1
   amountText: {fileID: 0}
 --- !u!1 &3762984669395849419
@@ -255,7 +255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.50980395, g: 0.5145019, b: 0.79607844, a: 1}
+  m_Color: {r: 0.79607844, g: 0.5507684, b: 0.50980395, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0

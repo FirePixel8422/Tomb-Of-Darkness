@@ -92,7 +92,7 @@ MonoBehaviour:
   inventory: {fileID: 0}
   itemHolder: {fileID: 7343298244000188604}
   heldItem: {fileID: 0}
-  full: 1
+  full: 0
   slotId: 0
   dubbelClickTimer: 0.25
 --- !u!1 &8785252909382554774

@@ -54,11 +54,19 @@ public class PlayerController : MonoBehaviour
     {
         if (ctx.performed)
         {
-            bool newInventoryState = !inventory.gameObject.activeInHierarchy;
-
-            inventory.gameObject.SetActive(newInventoryState);
-            Cursor.lockState = newInventoryState == true ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = newInventoryState;
+            if (inventory.gameObject.activeInHierarchy)
+            {
+                inventory.gameObject.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                inventory.SaveInventory();
+            }
+            else
+            {
+                inventory.gameObject.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
     }
 

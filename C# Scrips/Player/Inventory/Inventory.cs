@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
@@ -12,6 +13,8 @@ public class Inventory : MonoBehaviour
         Instance = this;
         gfxRayCaster = FindObjectOfType<GraphicRaycaster>();
     }
+
+    public InventorySaveLoadFunctions invSaveLoadFunctions;
 
     public GraphicRaycaster gfxRayCaster;
     public Slot[] slots;
@@ -31,7 +34,8 @@ public class Inventory : MonoBehaviour
             UpdateMoveItemToMouse();
         }
     }
-    
+
+
     public void OnLeftClick(InputAction.CallbackContext ctx)
     {
         if (gameObject.activeInHierarchy && ctx.performed)
@@ -74,9 +78,12 @@ public class Inventory : MonoBehaviour
     }
 
 
+
     private void Start()
     {
         slots = GetComponentsInChildren<Slot>();
+        invSaveLoadFunctions = GetComponent<InventorySaveLoadFunctions>();
+        invSaveLoadFunctions.Init();
 
         for (int i = 0; i < slots.Length; i++)
         {
@@ -85,11 +92,16 @@ public class Inventory : MonoBehaviour
     }
     private void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            SaveInventoryToFile();
+        }
         if (itemHeld)
         {
             UpdateMoveItemToMouse();
         }
     }
+
     public void UpdateMoveItemToMouse()
     {
         heldItem.transform.position = Input.mousePosition;
@@ -97,6 +109,7 @@ public class Inventory : MonoBehaviour
     public void StackAllItemToMax(Item item)
     {
         int amount = item.amount;
+        List<int> lateChecks = new List<int>();
 
         for (int i = 0; i < slots.Length; i++)
         {
@@ -106,9 +119,14 @@ public class Inventory : MonoBehaviour
                 {
                     continue;
                 }
+                if (slots[i].heldItem.amount == slots[i].heldItem.stackSize)
+                {
+                    lateChecks.Add(i);
+                    continue;
+                }
                 if ((amount + slots[i].heldItem.amount) > item.stackSize)
                 {
-                    slots[i].heldItem.UpdateAmountText(slots[i].heldItem.amount - (item.stackSize - amount));
+                    slots[i].heldItem.UpdateAmount(slots[i].heldItem.amount - (item.stackSize - amount));
                     amount = item.stackSize;
                     break;
                 }
@@ -120,6 +138,58 @@ public class Inventory : MonoBehaviour
                 }
             }
         }
-        item.UpdateAmountText(amount);
+        foreach(int i in lateChecks)
+        {
+            if ((amount + slots[i].heldItem.amount) > item.stackSize)
+            {
+                slots[i].heldItem.UpdateAmount(slots[i].heldItem.amount - (item.stackSize - amount));
+                amount = item.stackSize;
+                break;
+            }
+            else
+            {
+                amount += slots[i].heldItem.amount;
+                Destroy(slots[i].heldItem.gameObject);
+                slots[i].full = false;
+            }
+        }
+        item.UpdateAmount(amount);
+    }
+
+
+    public void ClearInventory()
+    {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].full)
+            {
+                Destroy(slots[i].heldItem.gameObject);
+            }
+            slots[i].full = false;
+        }
+    }
+    public void SaveInventory()
+    {
+        SlotData[] slotData = new SlotData[slots.Length];
+
+        for (int i = 0; i < slotData.Length; i++)
+        {
+            if (slots[i].full)
+            {
+                slotData[i].SetData(slots[i].full, slots[i].heldItem.itemId, slots[i].heldItem.amount);
+            }
+        }
+        invSaveLoadFunctions.slotData = slotData;
+    }
+
+    public void SaveInventoryToFile()
+    {
+        SaveAndLoadInventory.SaveInfo(invSaveLoadFunctions);
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveInventory();
+        SaveInventoryToFile();
     }
 }
