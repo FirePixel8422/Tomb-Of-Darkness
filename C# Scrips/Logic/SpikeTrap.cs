@@ -13,13 +13,18 @@ public class SpikeTrap : MonoBehaviour
 
     public BoxCollider trigger;
 
+    public float camRotSmoothSpeed;
+    public float camMoveSmoothSpeed;
+
 
     public void OnTriggerEnter(Collider other)
     {
         ThirdPersonCamera.Instance.ChangeCamUpdateMode(false);
-        PlayerDeathManager.Instance.KillBySpikes(transform.position);
+        PlayerDeathManager.Instance.KillBySpikes(transform.position, camMoveSmoothSpeed, camRotSmoothSpeed);
 
-        trapPlaneTriggerd = true;
+        trapPlane.isKinematic = false;
+        trapPlane.velocity = new Vector3(0, -fallSpeed, 0);
+        //trapPlaneTriggerd = true;
         wallColliders.SetActive(true);
     }
 
@@ -28,15 +33,6 @@ public class SpikeTrap : MonoBehaviour
         yield return new WaitForSeconds(1);
         wallColliders.SetActive(false);
         trapPlaneTriggerd = false;
-    }
-
-    private void FixedUpdate()
-    {
-        if (trapPlaneTriggerd == true)
-        {
-            trapPlane.isKinematic = false;
-            trapPlane.velocity = new Vector3(0, -fallSpeed, 0);
-        }
     }
 
     public void OnCollisionEnter(Collision other)

@@ -34,7 +34,11 @@ public class PlayerDeathManager : MonoBehaviour
     public Animator anim;
 
     public Vector3 finalDeathTransformPos;
+    public Quaternion finalDeathTransformRot;
     public float smoothSpeed;
+
+    private bool cutscene;
+    public bool dead;
 
 
     private void Start()
@@ -45,9 +49,13 @@ public class PlayerDeathManager : MonoBehaviour
         anim = thirdPersonCam.GetComponentInParent<Animator>();
     }
 
-    public void KillBySpikes(Vector3 spikePos)
+    public void KillBySpikes(Vector3 spikePos, float moveSmooth, float rotSmooth)
     {
+        StartCoroutine(UpdateCam(moveSmooth, rotSmooth));
+
         playerController.canMove = false;
+        cutscene = true;
+        dead = true;
         anim.SetBool("disableCam", true);
 
         rb.velocity = new Vector3(rb.velocity.x / 1.5f, -1.5f, rb.velocity.z / 1.5f);
@@ -57,11 +65,70 @@ public class PlayerDeathManager : MonoBehaviour
             thirdPersonCam.camRotPointX.rotation);
 
         finalDeathTransformPos = spikePos + Vector3.up / 3;
+        finalDeathTransformRot = Quaternion.Euler(90, deathTransform.localEulerAngles.y, deathTransform.localEulerAngles.z);
 
-        thirdPersonCam.camTargetGroup.m_Targets[0].target = deathTransform;
+        thirdPersonCam.ChangeCamFollowTransform(deathTransform);
 
         StartCoroutine(DeathText());
+        StartCoroutine(RespawnPlayer(8));
     }
+    public void PlayCutscene(Vector3 camPos, Quaternion camRot, float moveSmooth, float rotSmooth)
+    {
+        playerController.canMove = false;
+        playerController.rb.velocity = Vector3.zero;
+        cutscene = true;
+
+        StartCoroutine(UpdateCam(moveSmooth, rotSmooth));
+
+        thirdPersonCam.ChangeCamFollowTransform(deathTransform);
+
+        deathTransform.SetPositionAndRotation(playerController.transform.position,
+            thirdPersonCam.camRotPointX.rotation);
+
+        finalDeathTransformPos = camPos;
+        finalDeathTransformRot = camRot;
+
+        StartCoroutine(EndCutSceneDelay(5));
+    }
+    public void ResetCamToPlayerView(float moveSmooth, float rotSmooth)
+    {
+        cutscene = true;
+        playerController.canMove = true;
+
+        StartCoroutine(UpdateCam(moveSmooth, rotSmooth));
+
+        finalDeathTransformPos = thirdPersonCam.camRotPointX.position;
+        finalDeathTransformRot = thirdPersonCam.camRotPointX.rotation;
+    }
+    private IEnumerator EndCutSceneDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        cutscene = false;
+    }
+
+
+    private IEnumerator UpdateCam(float smoothSpeed, float deathRotSpeed)
+    {
+        while (cutscene)
+        {
+            yield return null;
+
+            deathTransform.rotation = Quaternion.Lerp(deathTransform.rotation, finalDeathTransformRot, deathRotSpeed * Time.deltaTime);
+
+            deathTransform.position = Vector3.MoveTowards(deathTransform.position, finalDeathTransformPos, smoothSpeed * Time.deltaTime);
+
+            if (dead)
+            {
+                deathVignette.weight += 1 / deathVignetteLoadTime * Time.deltaTime;
+            }
+
+            if (Vector3.Distance(deathTransform.position, finalDeathTransformPos) < 0.5f && Quaternion.Angle(deathTransform.rotation, finalDeathTransformRot) < 0.1f)
+            {
+                yield break;
+            }
+        }
+    }
+
 
     private IEnumerator DeathText()
     {
@@ -73,27 +140,12 @@ public class PlayerDeathManager : MonoBehaviour
             deathTextObj.color += new Color(0, 0, 0, 1 / textShowUpTime * Time.deltaTime);
         }
     }
-
-    private void Update()
-    {
-        if (playerController.canMove == false)
-        {
-            deathTransform.localEulerAngles = new Vector3(Mathf.MoveTowards(deathTransform.localEulerAngles.x, 90, deathRotSpeed * Time.deltaTime),
-                deathTransform.localEulerAngles.y,
-                deathTransform.localEulerAngles.z);
-
-            deathTransform.position = Vector3.MoveTowards(deathTransform.position, finalDeathTransformPos, smoothSpeed * Time.deltaTime);
-
-            deathVignette.weight += 1 / deathVignetteLoadTime * Time.deltaTime;
-        }
-    }
-
-    public IEnumerator RespawnPlayer(float respawnDelay)
+    private IEnumerator RespawnPlayer(float respawnDelay)
     {
 
         yield return new WaitForSeconds(respawnDelay);
 
-        playerController.canMove = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+        rb.rotation = Quaternion.identity;
     }
 }

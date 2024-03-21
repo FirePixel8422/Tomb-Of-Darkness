@@ -4,38 +4,59 @@ using UnityEngine;
 
 public class BarsLogic : MonoBehaviour
 {
+    [HideInInspector]
     public BoxCollider coll;
+    [HideInInspector]
     public Animator anim;
+    [HideInInspector]
+    public Rigidbody rb;
 
     public Transform camTransform;
 
-    public Vector3 localCamPos;
-    public Vector3 localRot;
+    public Vector3 camPos;
+    public Quaternion camRot;
+
+    public float camRotSmoothSpeed;
+    public float camMoveSmoothSpeed;
+
+    public float gateCloseDelay;
+    public float camResetDelay;
+    public float finalResetDelay;
+
+
 
     private void Start()
     {
-        localCamPos = camTransform.localPosition;
-        localRot = camTransform.localEulerAngles;
-    }
+        coll = GetComponent<BoxCollider>();
+        anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
 
-    private void Update()
-    {
-        
+        camPos = camTransform.position;
+        camRot = camTransform.rotation;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            LetBarsFall();
+            StartCoroutine(LetBarsFall());
             coll.enabled = false;
         }
     }
 
-    public void LetBarsFall()
+    private IEnumerator LetBarsFall()
     {
-        PlayerController.Instance.canMove = false;
-        ThirdPersonCamera.Instance.ChangeCamFollowTransform(camTransform);
-        anim.SetTrigger("Fall");
+        PlayerDeathManager.Instance.PlayCutscene(camPos, camRot, camMoveSmoothSpeed, camRotSmoothSpeed);
+
+        yield return new WaitForSeconds(gateCloseDelay);
+        rb.useGravity = true;
+        anim.SetBool("Open", false);
+
+        yield return new WaitForSeconds(camResetDelay);
+        PlayerDeathManager.Instance.ResetCamToPlayerView(camMoveSmoothSpeed, camRotSmoothSpeed);
+
+        yield return new WaitForSeconds(finalResetDelay);
+        ThirdPersonCamera.Instance.ChangeCamFollowTransform(ThirdPersonCamera.Instance.camRotPointX);
+
     }
 }
