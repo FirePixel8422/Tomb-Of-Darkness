@@ -37,6 +37,10 @@ public class ThirdPersonCamera : MonoBehaviour
         camInput = state;
     }
 
+    public void ChangeCamFollowTransform(Transform newTransform)
+    {
+        camTargetGroup.m_Targets[0].target = newTransform;
+    }
     private void Update()
     {
         if (camInput == false)
