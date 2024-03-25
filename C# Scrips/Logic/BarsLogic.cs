@@ -5,16 +5,16 @@ using UnityEngine;
 public class BarsLogic : MonoBehaviour
 {
     [HideInInspector]
-    public BoxCollider coll;
-    [HideInInspector]
-    public Animator anim;
-    [HideInInspector]
     public Rigidbody rb;
 
     public Transform camTransform;
+    public Vector3 gateWorldPos;
 
     public Vector3 camPos;
     public Quaternion camRot;
+
+    public float gateOpenSpeed;
+    public bool gateUsed;
 
     public float camRotSmoothSpeed;
     public float camMoveSmoothSpeed;
@@ -27,20 +27,28 @@ public class BarsLogic : MonoBehaviour
 
     private void Start()
     {
-        coll = GetComponent<BoxCollider>();
-        anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 
         camPos = camTransform.position;
         camRot = camTransform.rotation;
+
+        gateWorldPos = transform.localPosition;
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            StartCoroutine(OpenGate());
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && gateUsed == false)
         {
             StartCoroutine(LetBarsFall());
-            coll.enabled = false;
+            gateUsed = true;
         }
     }
 
@@ -50,13 +58,28 @@ public class BarsLogic : MonoBehaviour
 
         yield return new WaitForSeconds(gateCloseDelay);
         rb.useGravity = true;
-        anim.SetBool("Open", false);
 
         yield return new WaitForSeconds(camResetDelay);
         PlayerDeathManager.Instance.ResetCamToPlayerView(camMoveSmoothSpeed, camRotSmoothSpeed);
 
         yield return new WaitForSeconds(finalResetDelay);
         ThirdPersonCamera.Instance.ChangeCamFollowTransform(ThirdPersonCamera.Instance.camRotPointX);
+        PlayerController.Instance.canMove = true;
 
+    }
+    private IEnumerator OpenGate()
+    {
+        foreach(BoxCollider coll in GetComponentsInChildren<BoxCollider>())
+        {
+            Destroy(coll);
+        }
+        rb.useGravity = true;
+        rb.isKinematic = true;
+
+        while (transform.localPosition != gateWorldPos)
+        {
+            transform.localPosition = VectorLogic.InstantMoveTowards(transform.localPosition, gateWorldPos, gateOpenSpeed * Time.deltaTime);
+            yield return null;
+        }
     }
 }

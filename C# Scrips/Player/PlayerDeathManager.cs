@@ -80,6 +80,7 @@ public class PlayerDeathManager : MonoBehaviour
 
         StartCoroutine(UpdateCam(moveSmooth, rotSmooth));
 
+        thirdPersonCam.ChangeCamUpdateMode(false);
         thirdPersonCam.ChangeCamFollowTransform(deathTransform);
 
         deathTransform.SetPositionAndRotation(playerController.transform.position,
@@ -93,7 +94,6 @@ public class PlayerDeathManager : MonoBehaviour
     public void ResetCamToPlayerView(float moveSmooth, float rotSmooth)
     {
         cutscene = true;
-        playerController.canMove = true;
 
         StartCoroutine(UpdateCam(moveSmooth, rotSmooth));
 
@@ -103,6 +103,7 @@ public class PlayerDeathManager : MonoBehaviour
     private IEnumerator EndCutSceneDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+        thirdPersonCam.ChangeCamUpdateMode(true);
         cutscene = false;
     }
 
