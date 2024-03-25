@@ -124,6 +124,7 @@ public class PlayerDeathManager : MonoBehaviour
 
             if (Vector3.Distance(deathTransform.position, finalDeathTransformPos) < 0.5f && Quaternion.Angle(deathTransform.rotation, finalDeathTransformRot) < 0.1f)
             {
+                cutscene = false;
                 yield break;
             }
         }
