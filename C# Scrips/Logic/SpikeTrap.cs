@@ -19,27 +19,23 @@ public class SpikeTrap : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        ThirdPersonCamera.Instance.ChangeCamUpdateMode(false);
-        PlayerDeathManager.Instance.KillBySpikes(transform.position, camMoveSmoothSpeed, camRotSmoothSpeed);
+        if (trapPlaneTriggerd)
+        {
+            return;   
+        }
+        PlayerCutsceneManager.Instance.KillBySpikes(transform.position, camMoveSmoothSpeed, camRotSmoothSpeed);
 
         trapPlane.isKinematic = false;
         trapPlane.velocity = new Vector3(0, -fallSpeed, 0);
-        //trapPlaneTriggerd = true;
+        trapPlaneTriggerd = true;
         wallColliders.SetActive(true);
+        StartCoroutine(ResetTrap());
     }
 
     public IEnumerator ResetTrap()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(10);
         wallColliders.SetActive(false);
         trapPlaneTriggerd = false;
-    }
-
-    public void OnCollisionEnter(Collision other)
-    {
-        if (other.collider.gameObject.CompareTag("Player"))
-        {
-            print("death");
-        }
     }
 }

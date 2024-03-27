@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BarsLogic : MonoBehaviour
+public class Gate : MonoBehaviour
 {
     [HideInInspector]
     public Rigidbody rb;
+
+    private PlayerCutsceneManager manager;
 
     public Transform camTransform;
     public Vector3 gateWorldPos;
@@ -28,6 +30,7 @@ public class BarsLogic : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        manager = PlayerCutsceneManager.Instance;
 
         camPos = camTransform.position;
         camRot = camTransform.rotation;
@@ -35,51 +38,57 @@ public class BarsLogic : MonoBehaviour
         gateWorldPos = transform.localPosition;
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            StartCoroutine(OpenGate());
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player") && gateUsed == false)
         {
-            StartCoroutine(LetBarsFall());
+            StartCoroutine(Closegate());
             gateUsed = true;
         }
     }
 
-    private IEnumerator LetBarsFall()
+    private IEnumerator Closegate()
     {
-        PlayerDeathManager.Instance.PlayCutscene(camPos, camRot, camMoveSmoothSpeed, camRotSmoothSpeed);
+        manager.PlayCutscene(camPos, camRot, camMoveSmoothSpeed, camRotSmoothSpeed);
 
         yield return new WaitForSeconds(gateCloseDelay);
         rb.useGravity = true;
 
         yield return new WaitForSeconds(camResetDelay);
-        PlayerDeathManager.Instance.ResetCamToPlayerView(camMoveSmoothSpeed, camRotSmoothSpeed);
 
-        yield return new WaitForSeconds(finalResetDelay);
-        ThirdPersonCamera.Instance.ChangeCamFollowTransform(ThirdPersonCamera.Instance.camRotPointX);
-        PlayerController.Instance.canMove = true;
+        manager.OnCutsceneFinished.AddListener(ResetPlayerCamAndFinishCutscene);
+        manager.ResetCamToPlayerView(camMoveSmoothSpeed, camRotSmoothSpeed);
 
     }
-    private IEnumerator OpenGate()
+    public IEnumerator OpenGate()
     {
-        foreach(BoxCollider coll in GetComponentsInChildren<BoxCollider>())
+        rb.useGravity = false;
+        foreach (BoxCollider coll in GetComponentsInChildren<BoxCollider>())
         {
             Destroy(coll);
         }
-        rb.useGravity = true;
-        rb.isKinematic = true;
+
+        manager.PlayCutscene(camPos, camRot, camMoveSmoothSpeed, camRotSmoothSpeed);
+
+        yield return new WaitForSeconds(gateCloseDelay);
 
         while (transform.localPosition != gateWorldPos)
         {
             transform.localPosition = VectorLogic.InstantMoveTowards(transform.localPosition, gateWorldPos, gateOpenSpeed * Time.deltaTime);
             yield return null;
         }
+
+        yield return new WaitForSeconds(0.25f);
+        manager.OnCutsceneFinished.AddListener(ResetPlayerCamAndFinishCutscene);
+        manager.ResetCamToPlayerView(camMoveSmoothSpeed, camRotSmoothSpeed);
+    }
+
+    public void ResetPlayerCamAndFinishCutscene()
+    {
+        ThirdPersonCamera.Instance.ChangeCamFollowTransform(ThirdPersonCamera.Instance.camRotPointX);
+        ThirdPersonCamera.Instance.ChangeCamUpdateMode(true);
+
+        PlayerController.Instance.canMove = true;
+        manager.OnCutsceneFinished.RemoveAllListeners();
     }
 }

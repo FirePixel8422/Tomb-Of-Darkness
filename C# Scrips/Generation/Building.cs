@@ -85,9 +85,10 @@ public class Building : MonoBehaviour
 
         float tileSize = DungeonGrid.Instance.tileSize;
 
-        Vector3 bottomLeft = transform.position
-            - Vector3.right * transform.localScale.x / tileSize / 2
-            - Vector3.forward * transform.localScale.z / tileSize / 2;
+        Vector3 bottomLeft = transform.position - new Vector3(
+            (transform.localScale.x - tileSize) / 2 - tileSize / 2,
+            (transform.localScale.y - tileSize) / 2 - tileSize / 2,
+            (transform.localScale.z - tileSize) / 2 - tileSize / 2);
 
         for (int x = 0; x < Mathf.RoundToInt(transform.localScale.x / tileSize); x++)
         {
@@ -95,16 +96,19 @@ public class Building : MonoBehaviour
             {
                 for (int z = 0; z < Mathf.RoundToInt(transform.localScale.z / tileSize); z++)
                 {
-                    Node node = DungeonGrid.Instance.NodeFromWorldPoint(bottomLeft
-                        + Vector3.right * (x * tileSize - tileSize / 2) + Vector3.forward * (z * tileSize - tileSize / 2));
+                    Vector3 worldPos = bottomLeft
+                        + Vector3.right * (x * tileSize - tileSize / 2)
+                        + Vector3.forward * (z * tileSize - tileSize / 2)
+                        + Vector3.up * (y * tileSize - tileSize / 2);
+
+                    Node node = DungeonGrid.Instance.NodeFromWorldPoint(worldPos);
                     node.walkable = false;
 
                     if (special)
                     {
-                        DungeonGrid.Instance.NodeFromWorldPoint(bottomLeft
-                        + Vector3.right * (x * tileSize - tileSize / 2) + Vector3.forward * (z * tileSize - tileSize / 2));
+                        DungeonGrid.Instance.NodeFromWorldPoint(worldPos);
 
-                        GameObject cubeObj = Instantiate(cube, node.worldPos, Quaternion.identity);
+                        GameObject cubeObj = Instantiate(cube, worldPos, Quaternion.identity);
                         cubeObj.GetComponent<Renderer>().material.color = Color.blue;
                     }
                 }

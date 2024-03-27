@@ -355,6 +355,8 @@ MonoBehaviour:
   trapPlaneTriggerd: 0
   wallColliders: {fileID: 863252667454963776}
   trigger: {fileID: 9053765769885742745}
+  camRotSmoothSpeed: 1.2
+  camMoveSmoothSpeed: 2
 --- !u!1 &6974083771749595554
 GameObject:
   m_ObjectHideFlags: 0
