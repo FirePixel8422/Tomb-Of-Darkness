@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 5949908871727178094}
   - component: {fileID: 9016312206399270408}
   - component: {fileID: 3504943474798201126}
-  - component: {fileID: 5473209167160511461}
   m_Layer: 7
   m_Name: Gate
   m_TagString: Untagged
@@ -104,6 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
+  additionalgates: []
   camTransform: {fileID: 3003886460434712737}
   gateWorldPos: {x: 0, y: 0, z: 0}
   camPos: {x: 0, y: 0, z: 0}
@@ -226,27 +226,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.8468772, y: 2.2000003, z: 0.077736974}
   m_Center: {x: 0.000000059604645, y: 1.0999999, z: -1}
---- !u!95 &5473209167160511461
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2087994451675667006}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 31b86c2097af4eb4a9c3ab81e9171847, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3371915770878537153
 GameObject:
   m_ObjectHideFlags: 0

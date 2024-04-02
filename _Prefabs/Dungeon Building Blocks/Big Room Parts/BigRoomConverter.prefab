@@ -13,12 +13,12 @@ GameObject:
   - component: {fileID: 3337547133731753094}
   - component: {fileID: 8498797534606170829}
   - component: {fileID: 8072622939756213004}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BigRoomConverter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3812178008629914807
 Transform:

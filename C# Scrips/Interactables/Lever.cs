@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Lever : Interactable 
 {
-    public Gate gate;
+    public Gate[] gate;
 
     private Animator anim;
 
@@ -32,8 +32,10 @@ public class Lever : Interactable
 
         yield return new WaitForSeconds(interactDelay);
 
-        gate.StartCoroutine(gate.OpenGate());
-
+        foreach (Gate gate in gate)
+        {
+            gate.StartCoroutine(gate.OpenGate());
+        }
         canInteract = true;
     }
 }

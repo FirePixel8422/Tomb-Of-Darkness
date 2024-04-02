@@ -185,7 +185,8 @@ public class DungeonTileSpawner : MonoBehaviour
 
                 int3 downNodeGridPos = node.gridPos + new int3(0, -1, 0);
                 if (UnityEngine.Random.Range(0, 100f) > (100 - spikeChance) &&
-                    DungeonGrid.Instance.IsInsideGrid(downNodeGridPos) && DungeonGrid.Instance.GetNodeFromGridPos(downNodeGridPos).isOpen == false)
+                    DungeonGrid.Instance.IsInsideGrid(downNodeGridPos) && DungeonGrid.Instance.GetNodeFromGridPos(downNodeGridPos).isOpen == false
+                    && DungeonGrid.Instance.GetNodeFromGridPos(downNodeGridPos).walkable == true)
                 {
                     Destroy(spawnedObj.transform.GetChild(0).gameObject);
                     Instantiate(spikes, worldPos, Quaternion.identity);

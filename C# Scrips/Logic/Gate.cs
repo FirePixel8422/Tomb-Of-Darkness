@@ -9,6 +9,8 @@ public class Gate : MonoBehaviour
 
     private PlayerCutsceneManager manager;
 
+    public Gate[] additionalgates;
+
     public Transform camTransform;
     public Vector3 gateWorldPos;
 
@@ -52,7 +54,13 @@ public class Gate : MonoBehaviour
         manager.PlayCutscene(camPos, camRot, camMoveSmoothSpeed, camRotSmoothSpeed);
 
         yield return new WaitForSeconds(gateCloseDelay);
+
         rb.useGravity = true;
+        foreach (Gate gate in additionalgates)
+        {
+            gate.rb.useGravity = true;
+            gate.gateUsed = true;
+        }
 
         yield return new WaitForSeconds(camResetDelay);
 
@@ -68,13 +76,38 @@ public class Gate : MonoBehaviour
             Destroy(coll);
         }
 
+        foreach (Gate gate in additionalgates)
+        {
+            rb.useGravity = false;
+            foreach (BoxCollider coll in gate.GetComponentsInChildren<BoxCollider>())
+            {
+                Destroy(coll);
+            }
+        }
+
         manager.PlayCutscene(camPos, camRot, camMoveSmoothSpeed, camRotSmoothSpeed);
 
         yield return new WaitForSeconds(gateCloseDelay);
 
-        while (transform.localPosition != gateWorldPos)
+        int finishCounter = 0;
+        while (finishCounter != 1 + additionalgates.Length)
         {
+            finishCounter = 0;
+
             transform.localPosition = VectorLogic.InstantMoveTowards(transform.localPosition, gateWorldPos, gateOpenSpeed * Time.deltaTime);
+            if (transform.localPosition == gateWorldPos)
+            {
+                finishCounter += 1;
+            }
+
+            foreach (Gate gate in additionalgates)
+            {
+                gate.transform.position = VectorLogic.InstantMoveTowards(gate.transform.position, gate.gateWorldPos, gate.gateOpenSpeed * Time.deltaTime);
+                if(gate.transform.localPosition == gate.gateWorldPos)
+                {
+                    finishCounter += 1;
+                }
+            }
             yield return null;
         }
 
@@ -85,6 +118,11 @@ public class Gate : MonoBehaviour
 
     public void ResetPlayerCamAndFinishCutscene()
     {
+        rb.isKinematic = true;
+        foreach (Gate gate in additionalgates)
+        {
+            gate.rb.isKinematic = true;
+        }
         ThirdPersonCamera.Instance.ChangeCamFollowTransform(ThirdPersonCamera.Instance.camRotPointX);
         ThirdPersonCamera.Instance.ChangeCamUpdateMode(true);
 
