@@ -103,12 +103,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aee3d53fd4520564bbf0627acf7fc812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coll: {fileID: 4210194601515934397}
-  anim: {fileID: 0}
   rb: {fileID: 0}
   camTransform: {fileID: 3003886460434712737}
+  gateWorldPos: {x: 0, y: 0, z: 0}
   camPos: {x: 0, y: 0, z: 0}
   camRot: {x: 0, y: 0, z: 0, w: 0}
+  gateOpenSpeed: 0
+  gateUsed: 0
   camRotSmoothSpeed: 2
   camMoveSmoothSpeed: 3
   gateCloseDelay: 3
