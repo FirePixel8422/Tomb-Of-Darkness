@@ -21,7 +21,12 @@ public class BuildingManager : MonoBehaviour
     
     private void Start()
     {
-        buildings = FindObjectsOfType<Building>().ToList();
+        buildings = FindObjectsOfType<Building>(true).ToList();
+        foreach (Building building in buildings)
+        {
+            building.gameObject.SetActive(true);
+            print(building.isActiveAndEnabled);
+        }
         StartCoroutine(StartGeneration());
     }
 
@@ -62,6 +67,10 @@ public class BuildingManager : MonoBehaviour
                 {
                     print("All " + buildings.Count + " checked and generated succesfully");
                     DungeonGrid.Instance.SpawnCubes();
+                    foreach (Building building in buildings)
+                    {
+                        building.gameObject.SetActive(false);
+                    }
                     yield break;
                 }
                 yield return new WaitForSeconds((buildings.Count - buildingsDone) / 15);
@@ -77,10 +86,14 @@ public class BuildingManager : MonoBehaviour
                     succes += 1;
                 }
             }
-            if(succes == buildings.Count)
+            if (succes == buildings.Count)
             {
                 print("All " + buildings.Count + " checked and generated succesfully");
                 DungeonGrid.Instance.SpawnCubes();
+                foreach (Building building in buildings)
+                {
+                    building.gameObject.SetActive(false);
+                }
                 yield break;
             }
         }
@@ -89,6 +102,10 @@ public class BuildingManager : MonoBehaviour
 
         print(buildings.Count + " buildings checked for connection, failed, Cycle done...");
         DungeonGrid.Instance.SpawnCubes();
+        foreach (Building building in buildings)
+        {
+            building.gameObject.SetActive(false);
+        }
     }
 
 
@@ -99,13 +116,13 @@ public class BuildingManager : MonoBehaviour
         
         while (buildings.Count != 0)
         {
-            int lowest = 100;
+            int highestPriority = -10;
             int index = 0;
             for (int i = 0; i < buildings.Count; i++)
             {
-                if (buildings[i].gridPos.y < lowest || buildings[i].forceStairs)
+                if (buildings[i].priority > highestPriority)
                 {
-                    lowest = buildings[i].gridPos.y;
+                    highestPriority = buildings[i].gridPos.y;
                     index = i;
                 }
             }

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Building : MonoBehaviour
 {
+    public int priority;
+
     public List<Transform> entrances;
     public List<int2> entranceDirs;
 

@@ -193,7 +193,6 @@ public class DungeonTileSpawner : MonoBehaviour
                 else
                 {
                     Quaternion floorRot = Quaternion.Euler(0, Mathf.RoundToInt(-rot.y / 90) * 90, 0);
-                    print(dir.Count);
                     spawnedObj.transform.GetChild(0).rotation = floorRot;
                 }
             }

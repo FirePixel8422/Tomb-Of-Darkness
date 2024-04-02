@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class ExtensionMethods
 {
+    
     public static void SetParent(this Transform trans, Transform parent, bool keepLocalPos, bool keepLocalRot)
     {
         if (parent == null)
