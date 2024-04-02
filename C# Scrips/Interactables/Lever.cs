@@ -7,20 +7,18 @@ public class Lever : Interactable
     public Gate gate;
 
     private Animator anim;
-    private PlayerController pController;
 
     public float interactDelay;
     
 
     private void Start()
     {
-        pController = PlayerController.Instance;
         anim = GetComponent<Animator>();
     }
 
     public override void Interact()
     {
-        if (canInteract && pController.canMove && usable)
+        if (canInteract && usable)
         {
             StartCoroutine(PerformInteraction());
         }

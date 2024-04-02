@@ -5,7 +5,7 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
     public bool canInteract = true;
-    public bool usable;
+    public bool usable = true;
 
     public virtual void Interact()
     {
