@@ -9,7 +9,8 @@ public class Lever : Interactable
     private Animator anim;
 
     public float interactDelay;
-    
+
+
 
     private void Start()
     {
@@ -29,6 +30,8 @@ public class Lever : Interactable
         anim.SetTrigger("Pull");
         canInteract = false;
         usable = false;
+
+        MusicManager.Instance.ChangeMusicTrack(1, 0.2f);
 
         yield return new WaitForSeconds(interactDelay);
 

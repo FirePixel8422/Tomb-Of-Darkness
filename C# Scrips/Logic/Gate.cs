@@ -51,6 +51,8 @@ public class Gate : MonoBehaviour
 
     private IEnumerator Closegate()
     {
+        MusicManager.Instance.ChangeMusicTrack(0, 0.325f);
+
         manager.PlayCutscene(camPos, camRot, camMoveSmoothSpeed, camRotSmoothSpeed);
 
         yield return new WaitForSeconds(gateCloseDelay);
