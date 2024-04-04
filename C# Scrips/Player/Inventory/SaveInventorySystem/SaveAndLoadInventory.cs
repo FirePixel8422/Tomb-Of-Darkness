@@ -20,7 +20,7 @@ public static class SaveAndLoadInventory
 
         formatter.Serialize(stream, data);
         stream.Close();
-        Debug.Log("succes");
+        Debug.Log("Inventory Saved Correctly");
     }
 
     public static InventorySaveData LoadInfo()

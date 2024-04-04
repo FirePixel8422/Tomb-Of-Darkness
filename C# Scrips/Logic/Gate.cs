@@ -49,7 +49,7 @@ public class Gate : MonoBehaviour
         }
     }
 
-    private IEnumerator Closegate()
+    public virtual IEnumerator Closegate()
     {
         MusicManager.Instance.ChangeMusicTrack(0, 0.325f);
 
@@ -70,7 +70,7 @@ public class Gate : MonoBehaviour
         manager.ResetCamToPlayerView(camMoveSmoothSpeed, camRotSmoothSpeed);
 
     }
-    public IEnumerator OpenGate()
+    public virtual IEnumerator OpenGate()
     {
         rb.useGravity = false;
         foreach (BoxCollider coll in GetComponentsInChildren<BoxCollider>())
@@ -118,7 +118,7 @@ public class Gate : MonoBehaviour
         manager.ResetCamToPlayerView(camMoveSmoothSpeed, camRotSmoothSpeed);
     }
 
-    public void ResetPlayerCamAndFinishCutscene()
+    public virtual void ResetPlayerCamAndFinishCutscene()
     {
         rb.isKinematic = true;
         foreach (Gate gate in additionalgates)

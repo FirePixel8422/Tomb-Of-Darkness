@@ -12,14 +12,14 @@ GameObject:
   - component: {fileID: 9137331870596938657}
   - component: {fileID: 2211759970646047274}
   - component: {fileID: 976151058065475304}
+  - component: {fileID: 9016312206399270408}
   - component: {fileID: 4210194601515934397}
   - component: {fileID: 1966050446026835788}
   - component: {fileID: 5949908871727178094}
-  - component: {fileID: 9016312206399270408}
   - component: {fileID: 3504943474798201126}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Gate
-  m_TagString: Untagged
+  m_TagString: CamIgnore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,6 +115,33 @@ MonoBehaviour:
   gateCloseDelay: 3
   camResetDelay: 2
   finalResetDelay: 2
+--- !u!54 &9016312206399270408
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087994451675667006}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 122
+  m_CollisionDetection: 0
 --- !u!65 &4210194601515934397
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -178,33 +205,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.6762886, y: 1.9718236, z: 1.2825222}
   m_Center: {x: 2.537737, y: -1.0140882, z: -0.1412611}
---- !u!54 &9016312206399270408
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2087994451675667006}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 122
-  m_CollisionDetection: 0
 --- !u!65 &3504943474798201126
 BoxCollider:
   m_ObjectHideFlags: 0

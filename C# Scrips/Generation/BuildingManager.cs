@@ -25,7 +25,6 @@ public class BuildingManager : MonoBehaviour
         foreach (Building building in buildings)
         {
             building.gameObject.SetActive(true);
-            print(building.isActiveAndEnabled);
         }
         StartCoroutine(StartGeneration());
     }

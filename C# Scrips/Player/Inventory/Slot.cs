@@ -6,8 +6,6 @@ public class Slot : MonoBehaviour
 {
     public Inventory inventory;
 
-    public Transform itemHolder;
-
     public Item heldItem;
 
     public bool full;
@@ -70,7 +68,7 @@ public class Slot : MonoBehaviour
                     Item temp = heldItem;
 
                     heldItem = inventory.HeldItem;
-                    heldItem.transform.SetParent(itemHolder, false, false);
+                    heldItem.transform.SetParent(transform, false, false);
 
                     inventory.HeldItem = temp;
                     return;
@@ -79,7 +77,7 @@ public class Slot : MonoBehaviour
             inventory.itemHeld = false;
             full = true;
             heldItem = inventory.HeldItem;
-            heldItem.transform.SetParent(itemHolder, false, false);
+            heldItem.transform.SetParent(transform, false, false);
 
             if (heldItem.amount != heldItem.stackSize && timer > 0)
             {
@@ -149,7 +147,7 @@ public class Slot : MonoBehaviour
                 inventory.itemHeld = false;
 
                 heldItem = inventory.HeldItem;
-                heldItem.transform.SetParent(itemHolder, false, false);
+                heldItem.transform.SetParent(transform, false, false);
             }
             else
             {
@@ -159,7 +157,7 @@ public class Slot : MonoBehaviour
                 Item copiedItem = Instantiate(inventory.HeldItem.gameObject).GetComponent<Item>();
                 heldItem = copiedItem;
 
-                copiedItem.transform.SetParent(itemHolder, false, false);
+                copiedItem.transform.SetParent(transform, false, false);
                 copiedItem.UpdateAmount(1);
 
                 inventory.HeldItem.UpdateAmount(inventory.HeldItem.amount - 1);

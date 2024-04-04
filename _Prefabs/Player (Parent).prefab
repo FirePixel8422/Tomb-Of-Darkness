@@ -28861,6 +28861,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: slot
       objectReference: {fileID: 0}
+    - target: {fileID: 3271060312670128085, guid: 094559ef70e850b4c9feb77c86998d72,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4147905379035909320, guid: 094559ef70e850b4c9feb77c86998d72,
         type: 3}
       propertyPath: m_Pivot.x
