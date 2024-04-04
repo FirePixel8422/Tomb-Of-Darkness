@@ -79,9 +79,9 @@ public class PathFinding : MonoBehaviour
             closedNodes.Add(currentNode);
 
             if (currentNode == targetNode)
-            {                
-                sw.Stop();
+            {
                 //print("Path Found in " + sw.ElapsedMilliseconds + " ms");
+                sw.Stop();
                 totalMsLoadTime += sw.ElapsedMilliseconds;
 
                 buildingResult = 1;
@@ -91,7 +91,6 @@ public class PathFinding : MonoBehaviour
             int stairDirection = 0;
             if (currentNode.isStair == false)
             {
-                //stairDirection = grid.GetNodeFromGridPos(currentNode.parentIndex).gridPos.y - targetNode.gridPos.y;
                 stairDirection = Mathf.Clamp(targetNode.gridPos.y - currentNode.gridPos.y, -1, 1);
             }
 
@@ -166,6 +165,7 @@ public class PathFinding : MonoBehaviour
             }
         }
         //print("Path Failed");
+        sw.Stop();
         totalMsLoadTime += sw.ElapsedMilliseconds;
         return null;
     }

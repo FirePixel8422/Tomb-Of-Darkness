@@ -64,7 +64,7 @@ public class BuildingManager : MonoBehaviour
 
                 if (buildingsDone == buildings.Count)
                 {
-                    print("All " + buildings.Count + " checked and generated succesfully");
+                    print(buildings.Count + " buildings checked and generated succesfully, took " + cAttempts + " tries and took " + PathFinding.Instance.totalMsLoadTime + "ms");
                     DungeonGrid.Instance.SpawnCubes();
                     foreach (Building building in buildings)
                     {
@@ -87,7 +87,7 @@ public class BuildingManager : MonoBehaviour
             }
             if (succes == buildings.Count)
             {
-                print("All " + buildings.Count + " checked and generated succesfully");
+                print(buildings.Count + " buildings checked and generated succesfully, took " + cAttempts + " tries and took " + PathFinding.Instance.totalMsLoadTime + "ms");
                 DungeonGrid.Instance.SpawnCubes();
                 foreach (Building building in buildings)
                 {
