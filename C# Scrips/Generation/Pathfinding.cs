@@ -20,10 +20,6 @@ public class PathFinding : MonoBehaviour
 
     public List<Node> path;
 
-    public float targetMoveDistanceForPathUpdate = 1.5f;
-    public int ignoredBaseUpdateRange = 25;
-    public int rangeForFasterPathUpdateSpeed = 30;
-
 
 
     private void Start()

@@ -1,8 +1,5 @@
-﻿using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -23,7 +20,7 @@ public class DungeonTileSpawner : MonoBehaviour
     public GameObject xSplit;
     public GameObject stair;
     public GameObject spikes;
-    public GameObject door;
+    public GameObject entranceFiller;
 
 
     public void SpawnTiles(List<List<Node>> tiles)
@@ -183,6 +180,8 @@ public class DungeonTileSpawner : MonoBehaviour
                     spawnedObj = Instantiate(xSplit, worldPos, Quaternion.identity);
                 }
 
+                #region spikeTrap spawn logic
+
                 int3 downNodeGridPos = node.gridPos + new int3(0, -1, 0);
                 if (UnityEngine.Random.Range(0, 100f) > (100 - spikeChance) &&
                     DungeonGrid.Instance.IsInsideGrid(downNodeGridPos) && DungeonGrid.Instance.GetNodeFromGridPos(downNodeGridPos).isOpen == false
@@ -195,6 +194,25 @@ public class DungeonTileSpawner : MonoBehaviour
                 {
                     Quaternion floorRot = Quaternion.Euler(0, Mathf.RoundToInt(-rot.y / 90) * 90, 0);
                     spawnedObj.transform.GetChild(0).rotation = floorRot;
+                }
+                #endregion
+            }
+        }
+
+        foreach(Building b in FindObjectsOfType<Building>())
+        {
+            for (int i = 0; i < b.entrances.Count; i++)
+            {
+                if (Physics.Raycast(b.entrances[i].position, -b.entrances[i].up, 1) == false)
+                {
+                    float rotY = Mathf.Atan2(b.entranceDirs[i].x, b.entranceDirs[i].y) * -Mathf.Rad2Deg;
+                    float tileSize = DungeonGrid.Instance.tileSize;
+
+                    Instantiate(entranceFiller, 
+                        DungeonGrid.Instance.NodeFromWorldPoint(b.entrances[i].position).worldPos
+                        - Vector3.up * tileSize / 2
+                        - new Vector3(b.entranceDirs[i].x, 0, b.entranceDirs[i].y) * tileSize
+                        , Quaternion.Euler(0, rotY, 0));;
                 }
             }
         }

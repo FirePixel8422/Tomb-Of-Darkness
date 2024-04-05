@@ -9,6 +9,7 @@ public class Building : MonoBehaviour
 
     public List<Transform> entrances;
     public List<int2> entranceDirs;
+    public bool[] entrancesComplete;
 
     public List<Building> connectedBuildings;
     public List<int> buildingsCreated;

@@ -16,6 +16,9 @@ public class BuildingManager : MonoBehaviour
     public List<Building> buildings;
 
     public int maxAttempts;
+    public int maxReconfigureAttempts;
+    public int cReconfigureAttempts;
+    public int cBuildingsConfigDone;
     public int cAttempts;
 
     
@@ -33,7 +36,6 @@ public class BuildingManager : MonoBehaviour
     {
         for (int currentAttempt = 0; currentAttempt < maxAttempts; currentAttempt++)
         {
-            cAttempts = currentAttempt + 1;
 
             yield return new WaitForSeconds(0.1f);
             PathFinding.Instance.ResetGenerationSystem();
@@ -46,10 +48,12 @@ public class BuildingManager : MonoBehaviour
 
             SortBuildings(out buildings);
 
-
-            for (int tries = 0; tries < 10; tries++)
+            cBuildingsConfigDone = 0;
+            cReconfigureAttempts = 0;
+            for (int tries = 0; tries < maxReconfigureAttempts; tries++)
             {
-                int buildingsDone = 0;
+                cReconfigureAttempts = tries + 1;
+                cBuildingsConfigDone = 0;
                 for (int i = 0; i < buildings.Count; i++)
                 {
                     if (buildings[i].DoneBuilding == false)
@@ -58,13 +62,14 @@ public class BuildingManager : MonoBehaviour
                     }
                     else
                     {
-                        buildingsDone += 1;
+                        cBuildingsConfigDone += 1;
                     }
                 }
 
-                if (buildingsDone == buildings.Count)
+                if (cBuildingsConfigDone == buildings.Count)
                 {
-                    print(buildings.Count + " buildings checked and generated succesfully, took " + cAttempts + " tries and took " + PathFinding.Instance.totalMsLoadTime + "ms");
+                    cAttempts = currentAttempt + 1;
+                    print(buildings.Count + " buildings checked and generated succesfully, took " + cAttempts + " attempts and took " + PathFinding.Instance.totalMsLoadTime + "ms");
                     DungeonGrid.Instance.SpawnCubes();
                     foreach (Building building in buildings)
                     {
@@ -72,7 +77,7 @@ public class BuildingManager : MonoBehaviour
                     }
                     yield break;
                 }
-                yield return new WaitForSeconds((buildings.Count - buildingsDone) / 15);
+                yield return null;
             }
 
 
@@ -87,7 +92,8 @@ public class BuildingManager : MonoBehaviour
             }
             if (succes == buildings.Count)
             {
-                print(buildings.Count + " buildings checked and generated succesfully, took " + cAttempts + " tries and took " + PathFinding.Instance.totalMsLoadTime + "ms");
+                cAttempts = currentAttempt + 1;
+                print(buildings.Count + " buildings checked and generated succesfully, took " + cAttempts + " attempts and took " + PathFinding.Instance.totalMsLoadTime + "ms");
                 DungeonGrid.Instance.SpawnCubes();
                 foreach (Building building in buildings)
                 {
@@ -95,6 +101,8 @@ public class BuildingManager : MonoBehaviour
                 }
                 yield break;
             }
+
+            cAttempts = currentAttempt + 1;
         }
 
 
