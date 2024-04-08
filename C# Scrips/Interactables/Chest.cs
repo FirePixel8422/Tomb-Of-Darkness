@@ -12,6 +12,8 @@ public class Chest : Interactable
     public GameObject chestUI;
     private Animator anim;
 
+    public Slot[] slots;
+
     public float interactRange;
 
     public bool lootSpawned;
@@ -21,8 +23,11 @@ public class Chest : Interactable
     private void Start()
     {
         anim = GetComponent<Animator>();
+        slots = GetComponentsInChildren<Slot>(true);
+
         CanvasManager.AddUIToCanvas(chestUI.transform);
     }
+
     public override void Interact()
     {
         if(Vector3.Distance(PlayerController.Instance.transform.position, transform.position) > interactRange)
@@ -34,6 +39,7 @@ public class Chest : Interactable
         if (lootSpawned == false)
         {
             lootSpawned = true;
+            int currentSlot = 0;
             foreach (LootTableSO lootTable in loot)
             {
                 float r = Random.Range(0, 100);
@@ -54,14 +60,19 @@ public class Chest : Interactable
                             }
                             else
                             {
-                                items.Add(rarity.lootItems[i].lootItem);
-                                items[items.Count - 1].amount = Random.Range(rarity.lootItems[i].minAmount, rarity.lootItems[i].minAmount);
+                                Item itemObj = Instantiate(rarity.lootItems[i].lootItem, slots[currentSlot].transform, false).GetComponent<Item>();
+                                items.Add(itemObj);
+
+                                items[items.Count - 1].UpdateAmount(Random.Range(rarity.lootItems[i].minAmount, rarity.lootItems[i].maxAmount + 1));
+                                slots[currentSlot].heldItem = itemObj;
+                                slots[currentSlot].full = true;
                                 break;
                             }
                         }
                         break;
                     }
                 }
+                currentSlot += 1;
             }
         }
         open = !open;

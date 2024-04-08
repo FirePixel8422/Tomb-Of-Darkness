@@ -63,7 +63,7 @@ MonoBehaviour:
   itemId: 0
   stackSize: 4
   amount: 1
-  amountText: {fileID: 0}
+  amountText: {fileID: 3790540354098123064}
   itemName: 
   inGameObject: {fileID: 0}
   weapon:

@@ -13,22 +13,28 @@ MonoBehaviour:
   m_Name: Basic Consumables
   m_EditorClassIdentifier: 
   lootItemRarity:
-  - rarityChance: 60
+  - rarityChance: 55
     rarity: 0
     lootItems:
-    - lootItem: {fileID: 11400000, guid: 70b5c387e7963494ebdae9db57d741d3, type: 2}
+    - lootItem: {fileID: 3540063026024001090, guid: 44390f60ea9fe8c4d981dacd4aee2881,
+        type: 3}
       minAmount: 2
       maxAmount: 8
-  - rarityChance: 30
+  - rarityChance: 35
     rarity: 1
     lootItems:
-    - lootItem: {fileID: 11400000, guid: 1d2f3181b7a03754aae0db212d9cadd5, type: 2}
+    - lootItem: {fileID: 4443687771621804972, guid: 74234c4904ddffb47b700fa8aa8064de,
+        type: 3}
+      minAmount: 1
+      maxAmount: 2
+    - lootItem: {fileID: 4602658884973583413, guid: b92c687c97c26b048b9a5063c12d9055,
+        type: 3}
       minAmount: 1
       maxAmount: 2
   - rarityChance: 10
     rarity: 2
     lootItems:
-    - lootItem: {fileID: 11400000, guid: 9d8f1d9fc2c5edf46a8bcfaec14fefb3, type: 2}
+    - lootItem: {fileID: 3120075737471073810, guid: 4c1b55d1ad9af724fbfb7cf44875242f,
+        type: 3}
       minAmount: 1
       maxAmount: 1
-  rarities: []

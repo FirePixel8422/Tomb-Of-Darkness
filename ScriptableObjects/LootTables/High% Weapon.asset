@@ -10,17 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 17c1304f0b37a5a4bb519a0351078dc4, type: 3}
-  m_Name: Weapon
+  m_Name: High% Weapon
   m_EditorClassIdentifier: 
   lootItemRarity:
-  - rarityChance: 45
-    rarity: 0
-    lootItems:
-    - lootItem: {fileID: 8244281153856005156, guid: f5864ad1075e0634b9498724a8a6aec2,
-        type: 3}
-      minAmount: 1
-      maxAmount: 1
-  - rarityChance: 35
+  - rarityChance: 30
     rarity: 2
     lootItems:
     - lootItem: {fileID: 8244281153856005156, guid: d4ec960326f36874987fba2b3e8caaf9,
@@ -31,7 +24,7 @@ MonoBehaviour:
         type: 3}
       minAmount: 1
       maxAmount: 1
-  - rarityChance: 16
+  - rarityChance: 35
     rarity: 3
     lootItems:
     - lootItem: {fileID: 619870056588024012, guid: cc10c3f1b895f63439a6d4d89fb9ac32,
@@ -42,8 +35,15 @@ MonoBehaviour:
         type: 3}
       minAmount: 1
       maxAmount: 1
-  - rarityChance: 4
+  - rarityChance: 25
     rarity: 5
+    lootItems:
+    - lootItem: {fileID: 1357681305691601294, guid: ed289b6f4cd336f4b93078d530b6a5a3,
+        type: 3}
+      minAmount: 1
+      maxAmount: 1
+  - rarityChance: 10
+    rarity: 6
     lootItems:
     - lootItem: {fileID: 1357681305691601294, guid: ed289b6f4cd336f4b93078d530b6a5a3,
         type: 3}

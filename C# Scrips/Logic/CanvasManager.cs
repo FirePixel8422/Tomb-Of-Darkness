@@ -15,6 +15,7 @@ public class CanvasManager : MonoBehaviour
     {
         addedUI.SetParent(canvas.transform, true);
         addedUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        addedUI.transform.rotation = Quaternion.identity;
         foreach (Transform t in addedUI.GetComponentsInChildren<Transform>())
         {
             t.localScale = Vector3.one;

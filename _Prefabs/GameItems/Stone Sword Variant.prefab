@@ -10,6 +10,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -2507350327224392339, guid: b76af1142e9659d469a5f45b0eb0a771,
         type: 3}
+      propertyPath: itemId
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -2507350327224392339, guid: b76af1142e9659d469a5f45b0eb0a771,
+        type: 3}
+      propertyPath: stackSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2507350327224392339, guid: b76af1142e9659d469a5f45b0eb0a771,
+        type: 3}
       propertyPath: weapon.reach
       value: 1.5
       objectReference: {fileID: 0}

@@ -18,12 +18,6 @@ public class Item : MonoBehaviour
     public Armor armor;
 
 
-    private void Awake()
-    {
-        amountText = GetComponentInChildren<TextMeshProUGUI>(true);
-    }
-
-
     public void UpdateAmount(int newAmount)
     {
         amount = newAmount;

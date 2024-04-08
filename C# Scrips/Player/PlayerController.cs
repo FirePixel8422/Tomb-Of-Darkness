@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb;
 
     public Inventory inventory;
+    public Transform hotBar;
 
     public bool canMove;
 
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
         CanvasManager.AddUIToCanvas(inventory.transform);
+        CanvasManager.AddUIToCanvas(hotBar);
     }
 
 

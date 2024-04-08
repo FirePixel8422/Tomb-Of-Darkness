@@ -1,3 +1,4 @@
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -28,6 +29,10 @@ public class Slot : MonoBehaviour
     }
     public void OnLeftClick()
     {
+        if (inventory == null)
+        {
+            inventory = Inventory.Instance;
+        }
         if (full && inventory.itemHeld == false)
         {
             //als dit slot wat heeft en de cursor niet
@@ -87,6 +92,10 @@ public class Slot : MonoBehaviour
     }
     public void OnRightClick()
     {
+        if (inventory == null)
+        {
+            inventory = Inventory.Instance;
+        }
         if (full)
         {
             //dit slot heeft iets vast
@@ -136,7 +145,7 @@ public class Slot : MonoBehaviour
                 }
             }
         }
-        else if(inventory.itemHeld == true)
+        else if (inventory.itemHeld == true)
         {
             //dit slot heeft niks vast
             if (inventory.HeldItem.amount == 1)

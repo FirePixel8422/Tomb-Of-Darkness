@@ -26,6 +26,8 @@ public class DungeonTileSpawner : MonoBehaviour
 
     public void SpawnTiles(List<List<Node>> tiles)
     {
+        GameObject tileHolder = new GameObject("_SPAWNED_ TileHolder");
+
         for (int i = 0; i < tiles.Count; i++)
         {
             for (int i2 = 0; i2 < tiles[i].Count; i2++)
@@ -181,6 +183,8 @@ public class DungeonTileSpawner : MonoBehaviour
                     spawnedObj = Instantiate(xSplit, worldPos, Quaternion.identity);
                 }
 
+                spawnedObj.transform.SetParent(tileHolder.transform, true);
+
                 #region spikeTrap spawn logic
 
                 int3 downNodeGridPos = node.gridPos + new int3(0, -1, 0);
@@ -189,7 +193,8 @@ public class DungeonTileSpawner : MonoBehaviour
                     && DungeonGrid.Instance.GetNodeFromGridPos(downNodeGridPos).walkable == true)
                 {
                     Destroy(spawnedObj.transform.GetChild(0).gameObject);
-                    Instantiate(spikes, worldPos, Quaternion.identity);
+                    GameObject spikeTrap = Instantiate(spikes, worldPos, Quaternion.identity);
+                    spikeTrap.transform.SetParent(tileHolder.transform, true);
                 }
                 else
                 {
@@ -209,11 +214,13 @@ public class DungeonTileSpawner : MonoBehaviour
                     float rotY = Mathf.Atan2(b.entranceDirs[i].x, b.entranceDirs[i].y) * -Mathf.Rad2Deg;
                     float tileSize = DungeonGrid.Instance.tileSize;
 
-                    Instantiate(entranceFiller, 
+                    GameObject spawnedObj = Instantiate(entranceFiller, 
                         DungeonGrid.Instance.NodeFromWorldPoint(b.entrances[i].position).worldPos
                         - Vector3.up * tileSize / 2
                         - new Vector3(b.entranceDirs[i].x, 0, b.entranceDirs[i].y) * tileSize
                         , Quaternion.Euler(0, rotY, 0));;
+
+                    spawnedObj.transform.SetParent(tileHolder.transform, true);
                 }
             }
         }

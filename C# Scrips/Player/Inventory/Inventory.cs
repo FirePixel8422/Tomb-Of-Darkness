@@ -46,11 +46,9 @@ public class Inventory : MonoBehaviour
             var results = new List<RaycastResult>();
             gfxRayCaster.Raycast(pointerEventData, results);
 
-            print("d");
             foreach (var result in results)
             {
                 Slot slot = result.gameObject.GetComponent<Slot>();
-                print(result.gameObject.name);
 
                 if (slot != null)
                 {
