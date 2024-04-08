@@ -27,7 +27,7 @@ public class PlayerCutsceneManager : MonoBehaviour
     public Volume camVignette;
     public float camVignetteLoadTime;
 
-    public TextMeshProUGUI camTextObj;
+    public TextMeshProUGUI deathText;
     public float showTextDelay;
     public float textShowUpTime;
 
@@ -129,11 +129,12 @@ public class PlayerCutsceneManager : MonoBehaviour
     private IEnumerator CamText()
     {
         yield return new WaitForSeconds(showTextDelay);
+        deathText.gameObject.SetActive(true);
 
-        while (camTextObj.color.a != 1)
+        while (deathText.color.a != 1)
         {
             yield return null;
-            camTextObj.color += new Color(0, 0, 0, 1 / textShowUpTime * Time.deltaTime);
+            deathText.color += new Color(0, 0, 0, 1 / textShowUpTime * Time.deltaTime);
         }
     }
     private IEnumerator RespawnPlayer(float respawnDelay)

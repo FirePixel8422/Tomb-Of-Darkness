@@ -30,7 +30,7 @@ public class Inventory : MonoBehaviour
         set
         {
             heldItem = value;
-            heldItem.transform.SetParent(transform.parent, true, false);
+            heldItem.transform.SetParent(CanvasManager.canvas.transform, true, false);
             UpdateMoveItemToMouse();
         }
     }
@@ -40,6 +40,7 @@ public class Inventory : MonoBehaviour
     {
         if (gameObject.activeInHierarchy && ctx.performed)
         {
+            print("s");
             PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
             pointerEventData.position = Input.mousePosition;
 
@@ -49,8 +50,12 @@ public class Inventory : MonoBehaviour
             foreach (var result in results)
             {
                 Slot slot = result.gameObject.GetComponent<Slot>();
+                print(result.gameObject.name);
+
                 if (slot != null)
                 {
+                    print("succ");
+
                     slot.OnLeftClick();
                 }
             }
@@ -92,10 +97,6 @@ public class Inventory : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            SaveInventoryToFile();
-        }
         if (itemHeld)
         {
             UpdateMoveItemToMouse();
@@ -138,7 +139,7 @@ public class Inventory : MonoBehaviour
                 }
             }
         }
-        foreach(int i in lateChecks)
+        foreach (int i in lateChecks)
         {
             if ((amount + slots[i].heldItem.amount) > item.stackSize)
             {

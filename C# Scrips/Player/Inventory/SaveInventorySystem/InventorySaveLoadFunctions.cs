@@ -37,7 +37,7 @@ public class InventorySaveLoadFunctions : MonoBehaviour
             {
                 Slot slot = inv.slots[i];
 
-                slot.heldItem = Instantiate(allItemsOfGame[slotData[i].itemId]);
+                slot.heldItem = Instantiate(allItemsOfGame[slotData[i].itemId], transform, false);
                 slot.heldItem.transform.SetParent(slot.transform, false, false);
                 
                 slot.full = true;

@@ -100,9 +100,9 @@ public class Slot : MonoBehaviour
 
                     full = false;
                     heldItem.transform.SetParent(transform.root, true);
-                    heldItem = null;
                     inventory.HeldItem = heldItem;
                     inventory.itemHeld = true;
+                    heldItem = null;
                 }
                 else
                 {
@@ -112,7 +112,7 @@ public class Slot : MonoBehaviour
                     int amount = heldItem.amount / 2;
                     heldItem.UpdateAmount(heldItem.amount - amount);
 
-                    Item copiedItem = Instantiate(heldItem.gameObject).GetComponent<Item>();
+                    Item copiedItem = Instantiate(heldItem.gameObject, transform, false).GetComponent<Item>();
                     copiedItem.UpdateAmount(amount);
 
                     inventory.itemHeld = true;
@@ -154,7 +154,7 @@ public class Slot : MonoBehaviour
                 //de player heeft meer van 1 item vast met de cursor.
                 // -plaats 1 kopie van cursor item naar slot
 
-                Item copiedItem = Instantiate(inventory.HeldItem.gameObject).GetComponent<Item>();
+                Item copiedItem = Instantiate(inventory.HeldItem.gameObject, transform, false).GetComponent<Item>();
                 heldItem = copiedItem;
 
                 copiedItem.transform.SetParent(transform, false, false);

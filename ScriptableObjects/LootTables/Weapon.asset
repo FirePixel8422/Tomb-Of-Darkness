@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17c1304f0b37a5a4bb519a0351078dc4, type: 3}
+  m_Name: Weapon
+  m_EditorClassIdentifier: 
+  lootItemRarity:
+  - rarityChance: 45
+    rarity: 0
+    lootItems:
+    - lootItem: {fileID: 11400000, guid: b92fa631d1782ce44b47140b0b6cd3cb, type: 2}
+      minAmount: 1
+      maxAmount: 1
+  - rarityChance: 35
+    rarity: 2
+    lootItems:
+    - lootItem: {fileID: 11400000, guid: 33babfcd1c1b34845840ca8d5b217706, type: 2}
+      minAmount: 1
+      maxAmount: 1
+    - lootItem: {fileID: 11400000, guid: b05206c8532e15f4baba9c48cf75835f, type: 2}
+      minAmount: 1
+      maxAmount: 1
+  - rarityChance: 20
+    rarity: 3
+    lootItems:
+    - lootItem: {fileID: 11400000, guid: 89b986aadb76b2b45b392376a66420d4, type: 2}
+      minAmount: 1
+      maxAmount: 1
+    - lootItem: {fileID: 11400000, guid: 13d54401d475af743a803104098e5885, type: 2}
+      minAmount: 1
+      maxAmount: 1

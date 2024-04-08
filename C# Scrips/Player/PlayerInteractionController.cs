@@ -18,7 +18,7 @@ public class PlayerInteractionController : MonoBehaviour
 
     public void OnInteract(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed &&pController.canMove)
+        if (ctx.performed && pController.canMove)
         {
             if (Physics.Raycast(interactionRaycastTransform.position, interactionRaycastTransform.forward, out RaycastHit hit, interactionRange, interactablesLayers, QueryTriggerInteraction.Collide))
             {

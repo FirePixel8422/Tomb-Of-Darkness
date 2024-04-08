@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
         thirdPersonCam = GetComponent<ThirdPersonCamera>();
         rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
+        CanvasManager.AddUIToCanvas(inventory.transform);
     }
 
 
@@ -56,18 +57,31 @@ public class PlayerController : MonoBehaviour
         {
             if (inventory.gameObject.activeInHierarchy)
             {
-                inventory.gameObject.SetActive(false);
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                inventory.SaveInventory();
+                CloseInventory();
             }
             else
             {
-                inventory.gameObject.SetActive(true);
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                OpenInventory();
             }
         }
+    }
+
+    public void OpenInventory()
+    {
+        inventory.gameObject.SetActive(true);
+        thirdPersonCam.camInput = false;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+    public void CloseInventory()
+    {
+        inventory.gameObject.SetActive(false);
+        thirdPersonCam.camInput = true;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        inventory.SaveInventory();
     }
 
 

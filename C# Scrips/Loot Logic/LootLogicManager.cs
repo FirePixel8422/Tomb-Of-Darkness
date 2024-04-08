@@ -22,13 +22,13 @@ public class LootItemRarity
     public ItemRarity rarity;
 
     public LootItem[] lootItems;
+}
 
-    [System.Serializable]
-    public class LootItem
-    {
-        public LootItemSO lootItem;
-        public int minAmount = 1, maxAmount = 1;
-    }
+[System.Serializable]
+public class LootItem
+{
+    public LootItemSO lootItem;
+    public int minAmount = 1, maxAmount = 1;
 }
 public enum ItemRarity
 {
