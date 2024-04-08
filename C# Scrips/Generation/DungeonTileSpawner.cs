@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -201,9 +202,9 @@ public class DungeonTileSpawner : MonoBehaviour
 
         foreach(Building b in FindObjectsOfType<Building>())
         {
-            for (int i = 0; i < b.entrances.Count; i++)
+            for (int i = 0; i < b.entrancesComplete.Length; i++)
             {
-                if (Physics.Raycast(b.entrances[i].position, -b.entrances[i].up, 1) == false)
+                if (b.entrancesComplete[i] == false)
                 {
                     float rotY = Mathf.Atan2(b.entranceDirs[i].x, b.entranceDirs[i].y) * -Mathf.Rad2Deg;
                     float tileSize = DungeonGrid.Instance.tileSize;

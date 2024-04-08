@@ -68,6 +68,8 @@ public class Building : MonoBehaviour
         paths = new List<List<Node>>(maxConnections);
 
         entranceDirs = new List<int2>(entrances.Count);
+        entrancesComplete = new bool[entrances.Count];
+
         for (int i = 0; i < entrances.Count; i++)
         {
             Vector3 diff = transform.position - entrances[i].position;
@@ -140,8 +142,14 @@ public class Building : MonoBehaviour
                 connectedBuildings[i].GetClosestEntrance(closestEntranceThisBuilding, out int index2).position,
                 entranceDirs[index],
                 connectedBuildings[i].entranceDirs[index2],
-                out int tempInt));
-            buildingsCreated[i] = tempInt;
+                out int pathFindResult));
+
+            buildingsCreated[i] = pathFindResult;
+            if (pathFindResult == 1)
+            {
+                entrancesComplete[index] = true;
+                connectedBuildings[i].entrancesComplete[index2] = true;
+            }
         }
     }
 
