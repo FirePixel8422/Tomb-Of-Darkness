@@ -27,7 +27,7 @@ public class LootItemRarity
 [System.Serializable]
 public class LootItem
 {
-    public LootItemSO lootItem;
+    public Item lootItem;
     public int minAmount = 1, maxAmount = 1;
 }
 public enum ItemRarity
@@ -42,3 +42,17 @@ public enum ItemRarity
     Ancient,
     God,
 };
+
+[System.Serializable]
+public struct Weapon
+{
+    public float damage;
+    public float attackSpeed;
+    public float reach;
+}
+[System.Serializable]
+public struct Armor
+{
+    public float damageReduction;
+    public float speedModifier;
+}

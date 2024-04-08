@@ -10,6 +10,13 @@ public class Item : MonoBehaviour
     public int amount;
     public TextMeshProUGUI amountText;
 
+    public string itemName;
+
+    public GameObject inGameObject;
+
+    public Weapon weapon;
+    public Armor armor;
+
 
     private void Awake()
     {

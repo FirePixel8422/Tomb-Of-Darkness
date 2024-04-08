@@ -8,20 +8,9 @@ public class LootItemSO : ScriptableObject
 {
     public string itemName;
 
+    public Sprite sprite;
+    public GameObject inGameObject;
+
     public Weapon weapon;
     public Armor armor;
-}
-
-[System.Serializable]
-public struct Weapon
-{
-    public float damage;
-    public float attackSpeed;
-    public float reach;
-}
-[System.Serializable]
-public struct Armor
-{
-    public float damageReduction;
-    public float speedModifier;
 }

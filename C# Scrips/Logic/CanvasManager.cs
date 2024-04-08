@@ -14,5 +14,10 @@ public class CanvasManager : MonoBehaviour
     public static void AddUIToCanvas(Transform addedUI)
     {
         addedUI.SetParent(canvas.transform, true);
+        addedUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        foreach (Transform t in addedUI.GetComponentsInChildren<Transform>())
+        {
+            t.localScale = Vector3.one;
+        }
     }
 }

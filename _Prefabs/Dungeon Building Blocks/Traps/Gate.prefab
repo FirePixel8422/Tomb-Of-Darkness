@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6475685472653265527}
   - component: {fileID: 9137331870596938657}
   - component: {fileID: 2211759970646047274}
+  - component: {fileID: 4033306218237672739}
   - component: {fileID: 976151058065475304}
   - component: {fileID: 9016312206399270408}
   - component: {fileID: 4210194601515934397}
@@ -90,6 +91,40 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4033306218237672739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087994451675667006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b8ac26e47cb9c24a8fe655fbfdeb1bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  additionalgates: []
+  camTransform: {fileID: 3003886460434712737}
+  gateWorldPos: {x: 0, y: 0, z: 0}
+  camPos: {x: 0, y: 0, z: 0}
+  camRot: {x: 0, y: 0, z: 0, w: 0}
+  gateOpenSpeed: 0
+  gateUsed: 0
+  camRotSmoothSpeed: 0
+  camMoveSmoothSpeed: 0
+  gateCloseDelay: 0
+  camResetDelay: 0
+  finalResetDelay: 0
+  colorFadeTime: 0
+  tempFadeTime: 0
+  cursedLanternColor: {r: 0, g: 0, b: 0, a: 0}
+  cursedLanternTemp: 0
+  upgradeLanternTimeDelay: 0
+  lanternBuffMultiplier: 0
+  textfadeTime: 0
+  textFadeOutDelay: 0
+  toolTipTextObj: {fileID: 0}
 --- !u!114 &976151058065475304
 MonoBehaviour:
   m_ObjectHideFlags: 0

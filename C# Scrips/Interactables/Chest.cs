@@ -7,7 +7,7 @@ using UnityEngine;
 public class Chest : Interactable
 {
     public LootTableSO[] loot;
-    public List<LootItem> items = new List<LootItem>();
+    public List<Item> items = new List<Item>();
 
     public GameObject chestUI;
     private Animator anim;
@@ -54,7 +54,8 @@ public class Chest : Interactable
                             }
                             else
                             {
-                                items.Add(rarity.lootItems[i]);
+                                items.Add(rarity.lootItems[i].lootItem);
+                                items[items.Count - 1].amount = Random.Range(rarity.lootItems[i].minAmount, rarity.lootItems[i].minAmount);
                                 break;
                             }
                         }

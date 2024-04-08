@@ -40,13 +40,13 @@ public class Inventory : MonoBehaviour
     {
         if (gameObject.activeInHierarchy && ctx.performed)
         {
-            print("s");
             PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
             pointerEventData.position = Input.mousePosition;
 
             var results = new List<RaycastResult>();
             gfxRayCaster.Raycast(pointerEventData, results);
 
+            print("d");
             foreach (var result in results)
             {
                 Slot slot = result.gameObject.GetComponent<Slot>();
@@ -54,8 +54,6 @@ public class Inventory : MonoBehaviour
 
                 if (slot != null)
                 {
-                    print("succ");
-
                     slot.OnLeftClick();
                 }
             }
@@ -112,6 +110,7 @@ public class Inventory : MonoBehaviour
         int amount = item.amount;
         List<int> lateChecks = new List<int>();
 
+        Slot[] slots = transform.root.GetComponentsInChildren<Slot>();
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i].full && slots[i].heldItem.itemId == item.itemId)
