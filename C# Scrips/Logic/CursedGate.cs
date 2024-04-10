@@ -19,6 +19,8 @@ public class CursedGate : Gate
     public float textFadeOutDelay;
     public TextMeshProUGUI toolTipTextObj;
 
+    public int lightIndex;
+
 
 
     
@@ -49,7 +51,7 @@ public class CursedGate : Gate
     private IEnumerator UpgradeLanternDelay(Light lanternLight)
     {
         yield return new WaitForSeconds(upgradeLanternTimeDelay);
-        lanternLight.transform.parent.GetChild(2).gameObject.SetActive(true);
+        lanternLight.transform.parent.GetChild(1 + lightIndex).gameObject.SetActive(true);
 
         lanternLight.intensity *= lanternBuffMultiplier;
         lanternLight.range *= lanternBuffMultiplier;
