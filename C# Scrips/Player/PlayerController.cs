@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public Rigidbody rb;
 
+    private Animator anim;
+
     public Inventory inventory;
     public Transform hotBar;
 
@@ -36,6 +38,7 @@ public class PlayerController : MonoBehaviour
     {
         thirdPersonCam = GetComponent<ThirdPersonCamera>();
         rb = GetComponent<Rigidbody>();
+        anim = GetComponentInChildren<Animator>();
         Cursor.lockState = CursorLockMode.Locked;
         CanvasManager.AddUIToCanvas(inventory.transform);
         CanvasManager.AddUIToCanvas(hotBar);
@@ -96,6 +99,7 @@ public class PlayerController : MonoBehaviour
         if (moveDir == Vector3.zero)
         {
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            anim.SetBool("walking", false);
             return;
         }
 
@@ -108,5 +112,6 @@ public class PlayerController : MonoBehaviour
 
 
         rb.velocity = new Vector3(forwardMoveDir.x * moveSpeed, rb.velocity.y, forwardMoveDir.z * moveSpeed);
+        anim.SetBool("walking", true);
     }
 }

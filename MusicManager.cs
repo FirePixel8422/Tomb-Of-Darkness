@@ -38,10 +38,11 @@ public class MusicManager : MonoBehaviour
 
         while (currentSource.volume > 0)
         {
-            currentSource.volume -= fadeSpeed * Time.deltaTime;
-            altSource.volume += fadeSpeed * Time.deltaTime;
-            yield return null;
+            currentSource.volume -= fadeSpeed * 0.1f;
+            altSource.volume += fadeSpeed * 0.1f;
+            yield return new WaitForSeconds(0.1f);
         }
+
         currentSource.Stop();
 
         altMusicPlayerActive = !altMusicPlayerActive;

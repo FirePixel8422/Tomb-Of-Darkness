@@ -1633,6 +1633,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 1362c327c3bd0554bada272dabf7379e,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -7640558969779515294, guid: 1362c327c3bd0554bada272dabf7379e,
         type: 3}
       propertyPath: m_Layer
@@ -1642,6 +1647,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -7146521406498821007, guid: 1362c327c3bd0554bada272dabf7379e,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -6093592463355912122, guid: 1362c327c3bd0554bada272dabf7379e,
         type: 3}
@@ -1673,6 +1683,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1362c327c3bd0554bada272dabf7379e,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4865064391339405807, guid: 1362c327c3bd0554bada272dabf7379e,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -1687,6 +1702,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8416272007918961125, guid: 1362c327c3bd0554bada272dabf7379e,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1759,6 +1779,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f336850210d622d4387b84f87e673006, type: 2}
   items: []
   chestUI: {fileID: 1719131190810488896}
+  slots: []
   interactRange: 2.25
   lootSpawned: 0
   open: 0

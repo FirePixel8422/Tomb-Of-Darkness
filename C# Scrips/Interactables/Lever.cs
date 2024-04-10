@@ -21,22 +21,23 @@ public class Lever : Interactable
     {
         if (canInteract && usable)
         {
+            anim.SetTrigger("Pull");
+            canInteract = false;
+            usable = false;
+
+            MusicManager.Instance.ChangeMusicTrack(0, 0.2f);
+
             StartCoroutine(PerformInteraction());
         }
     }
 
     private IEnumerator PerformInteraction()
     {
-        anim.SetTrigger("Pull");
-        canInteract = false;
-        usable = false;
-
-        MusicManager.Instance.ChangeMusicTrack(1, 0.2f);
-
         yield return new WaitForSeconds(interactDelay);
 
         foreach (Gate gate in gate)
         {
+            yield return null;
             gate.StartCoroutine(gate.OpenGate());
         }
         canInteract = true;
