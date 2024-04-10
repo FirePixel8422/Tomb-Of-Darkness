@@ -92,7 +92,7 @@ public class Gate : MonoBehaviour
         yield return new WaitForSeconds(gateCloseDelay);
 
         int finishCounter = 0;
-        while (finishCounter != 1 + additionalgates.Length)
+        while (finishCounter != (1 + additionalgates.Length))
         {
             finishCounter = 0;
 
@@ -104,8 +104,8 @@ public class Gate : MonoBehaviour
 
             foreach (Gate gate in additionalgates)
             {
-                gate.transform.position = VectorLogic.InstantMoveTowards(gate.transform.position, gate.gateWorldPos, gate.gateOpenSpeed * Time.deltaTime);
-                if(gate.transform.localPosition == gate.gateWorldPos)
+                gate.transform.localPosition = VectorLogic.InstantMoveTowards(gate.transform.localPosition, gate.gateWorldPos, gate.gateOpenSpeed * Time.deltaTime);
+                if (gate.transform.localPosition == gate.gateWorldPos)
                 {
                     finishCounter += 1;
                 }
