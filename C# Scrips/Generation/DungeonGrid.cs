@@ -243,7 +243,8 @@ public class DungeonGrid : MonoBehaviour
                 fullList.Add(buildings[i].paths[i2]);
             }
         }
-        DungeonTileSpawner.Instance.SpawnTiles(fullList);
+
+        StartCoroutine(DungeonTileSpawner.Instance.SpawnTiles(fullList));
 
         /*for (int i = 0; i < buildings.Length; i++)
         {

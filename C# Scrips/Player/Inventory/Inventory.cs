@@ -40,6 +40,7 @@ public class Inventory : MonoBehaviour
     {
         if (gameObject.activeInHierarchy && ctx.performed)
         {
+            print("p");
             PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
             pointerEventData.position = Input.mousePosition;
 
@@ -48,6 +49,7 @@ public class Inventory : MonoBehaviour
 
             foreach (var result in results)
             {
+                print("l");
                 Slot slot = result.gameObject.GetComponent<Slot>();
 
                 if (slot != null)

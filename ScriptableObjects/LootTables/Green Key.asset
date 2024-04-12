@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17c1304f0b37a5a4bb519a0351078dc4, type: 3}
+  m_Name: Green Key
+  m_EditorClassIdentifier: 
+  lootItemRarity:
+  - rarityChance: 100
+    rarity: 0
+    lootItems:
+    - lootItem: {fileID: -2507350327224392339, guid: a053fffb695b3cd4cb567a6bb18715b6,
+        type: 3}
+      minAmount: 1
+      maxAmount: 1

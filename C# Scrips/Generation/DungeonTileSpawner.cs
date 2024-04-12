@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class DungeonTileSpawner : MonoBehaviour
     public GameObject entranceFiller;
 
 
-    public void SpawnTiles(List<List<Node>> tiles)
+    public IEnumerator SpawnTiles(List<List<Node>> tiles)
     {
         GameObject tileHolder = new GameObject("_SPAWNED_ TileHolder");
 
@@ -32,6 +33,8 @@ public class DungeonTileSpawner : MonoBehaviour
         {
             for (int i2 = 0; i2 < tiles[i].Count; i2++)
             {
+                yield return null;
+
                 Node node = tiles[i][i2];
                 if (node.placedInWorld)
                 {
