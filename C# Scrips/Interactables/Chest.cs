@@ -30,7 +30,7 @@ public class Chest : Interactable
 
     public override void Interact()
     {
-        if(Vector3.Distance(PlayerController.Instance.transform.position, transform.position) > interactRange)
+        if (Vector3.Distance(PlayerController.Instance.transform.position, transform.position) > interactRange)
         {
             return;
         }
@@ -62,6 +62,7 @@ public class Chest : Interactable
                             {
                                 Item itemObj = Instantiate(rarity.lootItems[i].lootItem, slots[currentSlot].transform, false).GetComponent<Item>();
                                 items.Add(itemObj);
+                                itemObj.transform.localPosition = Vector3.zero;
 
                                 items[items.Count - 1].UpdateAmount(Random.Range(rarity.lootItems[i].minAmount, rarity.lootItems[i].maxAmount + 1));
                                 slots[currentSlot].heldItem = itemObj;
@@ -100,7 +101,7 @@ public class Chest : Interactable
 
                 chestUI.SetActive(false);
             }
-            else if(Vector3.Distance(PlayerController.Instance.transform.position, transform.position) > interactRange)
+            else if (Vector3.Distance(PlayerController.Instance.transform.position, transform.position) > interactRange)
             {
                 open = false;
                 anim.SetTrigger("Open");

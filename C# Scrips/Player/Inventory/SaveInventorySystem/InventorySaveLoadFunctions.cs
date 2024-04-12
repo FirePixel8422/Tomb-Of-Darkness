@@ -22,7 +22,7 @@ public class InventorySaveLoadFunctions : MonoBehaviour
         InventorySaveData data = SaveAndLoadInventory.LoadInfo();
         if (data != null)
         {
-            LoadInventoryFromFile(data);
+            //LoadInventoryFromFile(data);
         }
     }
 
